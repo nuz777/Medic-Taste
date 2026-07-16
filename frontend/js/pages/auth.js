@@ -1,108 +1,124 @@
 import { login, register, getUser } from '../services/authService.js';
 import { isEmail, isNotEmpty, isPassword } from '../utils/validators.js';
 
-const isLoginPage = window.location.pathname.includes('login');
-const form = document.getElementById(isLoginPage ? 'loginForm' : 'registerForm');
-const submitBtn = document.getElementById('submitBtn');
-const formAlert = document.getElementById('formAlert');
-const passwordToggle = document.getElementById('passwordToggle');
+const container = document.getElementById('authContainer');
 
-function showError(msg) {
-  formAlert.textContent = msg;
-  formAlert.className = 'form-alert error show';
+function goTo(state) {
+  if (!container) return;
+  container.classList.toggle('active', state === 'register');
+  const url = state === 'register' ? 'register.html' : 'login.html';
+  history.replaceState(null, '', url);
 }
 
-function clearError() {
-  formAlert.textContent = '';
-  formAlert.className = 'form-alert';
-}
+document.querySelectorAll('[data-switch]').forEach((el) => {
+  el.addEventListener('click', (e) => {
+    e.preventDefault();
+    goTo(el.dataset.switch);
+  });
+});
 
-function validateField(id, validator) {
-  const input = document.getElementById(id);
-  const errorEl = document.getElementById(`${id}Error`);
-  const valid = validator(input.value);
+function setupForm(form) {
+  const kind = form.dataset.form;
+  const alertEl = form.querySelector('[data-alert]');
+  const submitBtn = form.querySelector('[data-submit]');
+  const passwordToggle = form.querySelector('[data-password-toggle]');
+  const passwordInput = form.querySelector('[data-field="password"]');
 
-  if (input.value && !valid) {
-    input.classList.add('error');
-    if (errorEl) errorEl.classList.add('show');
-  } else {
-    input.classList.remove('error');
-    if (errorEl) errorEl.classList.remove('show');
+  function field(name) {
+    return form.querySelector(`[data-field="${name}"]`);
   }
 
-  return input.value ? valid : true;
-}
-
-function validateForm(data) {
-  let valid = true;
-
-  if (data.name !== undefined) {
-    valid = validateField('name', isNotEmpty) && valid;
+  function errorEl(name) {
+    return form.querySelector(`[data-error="${name}"]`);
   }
-  valid = validateField('email', isEmail) && valid;
-  valid = validateField('password', isPassword) && valid;
 
-  return valid;
-}
+  function showAlert(msg) {
+    alertEl.textContent = msg;
+    alertEl.className = 'form-alert error show';
+  }
 
-if (passwordToggle) {
-  passwordToggle.addEventListener('click', () => {
-    const input = document.getElementById('password');
-    const type = input.type === 'password' ? 'text' : 'password';
-    input.type = type;
-    passwordToggle.textContent = type === 'password' ? '👁️' : '🙈';
+  function clearAlert() {
+    alertEl.textContent = '';
+    alertEl.className = 'form-alert';
+  }
+
+  function validateField(name, validator) {
+    const input = field(name);
+    const err = errorEl(name);
+    const valid = validator(input.value);
+
+    if (input.value && !valid) {
+      input.classList.add('error');
+      if (err) err.classList.add('show');
+    } else {
+      input.classList.remove('error');
+      if (err) err.classList.remove('show');
+    }
+    return input.value ? valid : true;
+  }
+
+  function validateForm() {
+    let valid = true;
+    if (kind === 'register') {
+      valid = validateField('name', isNotEmpty) && valid;
+    }
+    valid = validateField('email', isEmail) && valid;
+    valid = validateField('password', isPassword) && valid;
+    return valid;
+  }
+
+  if (passwordToggle && passwordInput) {
+    passwordToggle.addEventListener('click', () => {
+      const type = passwordInput.type === 'password' ? 'text' : 'password';
+      passwordInput.type = type;
+      passwordToggle.classList.toggle('is-visible', type === 'text');
+      passwordToggle.setAttribute('aria-label', type === 'text' ? 'Ocultar contraseña' : 'Mostrar contraseña');
+      passwordToggle.classList.remove('toggled');
+      void passwordToggle.offsetWidth;
+      passwordToggle.classList.add('toggled');
+    });
+  }
+
+  ['name', 'email', 'password'].forEach((name) => {
+    const input = field(name);
+    if (input) {
+      input.addEventListener('input', () =>
+        validateField(name, name === 'email' ? isEmail : name === 'password' ? isPassword : isNotEmpty)
+      );
+    }
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearAlert();
+
+    if (!validateForm()) {
+      showAlert('Corrige los campos marcados en rojo');
+      return;
+    }
+
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = kind === 'login' ? 'Ingresando...' : 'Creando cuenta...';
+
+    try {
+      if (kind === 'login') {
+        await login(field('email').value.trim(), field('password').value);
+      } else {
+        await register(field('name').value.trim(), field('email').value.trim(), field('password').value);
+      }
+      const user = getUser();
+      if (user && user.onboarding_completed) {
+        window.location.href = '/app.html';
+      } else {
+        window.location.href = '/onboarding.html';
+      }
+    } catch (err) {
+      showAlert(err.message || 'Error al procesar la solicitud');
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
+    }
   });
 }
 
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  clearError();
-
-  const data = {
-    email: document.getElementById('email').value.trim(),
-    password: document.getElementById('password').value,
-  };
-
-  if (!isLoginPage) {
-    data.name = document.getElementById('name').value.trim();
-  }
-
-  if (!validateForm(data)) {
-    showError('Corrige los campos marcados en rojo');
-    return;
-  }
-
-  submitBtn.disabled = true;
-  submitBtn.textContent = isLoginPage ? 'Ingresando...' : 'Creando cuenta...';
-
-  try {
-    if (isLoginPage) {
-      await login(data.email, data.password);
-    } else {
-      await register(data.name, data.email, data.password);
-    }
-    const user = getUser();
-    if (user && user.onboarding_completed) {
-      window.location.href = '/app.html';
-    } else {
-      window.location.href = '/onboarding.html';
-    }
-  } catch (err) {
-    showError(err.message || 'Error al procesar la solicitud');
-    submitBtn.disabled = false;
-    submitBtn.textContent = isLoginPage ? 'Iniciar sesión' : 'Crear cuenta';
-  }
-});
-
-[document.getElementById('email'), document.getElementById('password')].forEach(el => {
-  if (el) {
-    el.addEventListener('input', () => validateField(el.id, el.id === 'email' ? isEmail : isPassword));
-  }
-});
-
-if (!isLoginPage) {
-  const nameInput = document.getElementById('name');
-  if (nameInput) {
-    nameInput.addEventListener('input', () => validateField('name', isNotEmpty));
-  }
-}
+document.querySelectorAll('form[data-form]').forEach(setupForm);
