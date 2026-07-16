@@ -6,7 +6,7 @@ Planificador nutricional que genera menús semanales con recetas balanceadas.
 
 - **Node.js** (v18+)
 - **MySQL** (v8+)
-- **Python 3** (para servir el frontend)
+- **Python 3** (para servir el frontend)....
 
 ## Setup
 
