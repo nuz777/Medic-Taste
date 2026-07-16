@@ -29,8 +29,20 @@
   --shadow: 0 2px 12px rgba(0,0,0,0.06);
   --shadow-lg: 0 8px 30px rgba(0,0,0,0.1);
   --shadow-xl: 0 20px 60px rgba(0,0,0,0.12);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+  --shadow-glow: 0 0 0 3px rgba(0, 137, 123, 0.12), 0 2px 8px rgba(0, 137, 123, 0.08);
+  --primary-50: rgba(0, 137, 123, 0.06);
+  --border-subtle: #E9F0EE;
   --font: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --radius-md: 10px;
+  --radius-pill: 999px;
+  --diet-omnivore-text: #6B7280;
+  --diet-pescatarian-text: #1565C0;
 }
 
 *, *::before, *::after {

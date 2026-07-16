@@ -11,6 +11,7 @@ const sidebar = document.getElementById('sidebar');
 const sidebarOverlay = document.getElementById('sidebarOverlay');
 const menuToggle = document.getElementById('menuToggle');
 const sidebarClose = document.getElementById('sidebarClose');
+const sidebarToggle = document.getElementById('sidebarToggle');
 const pageContent = document.getElementById('pageContent');
 const sidebarLinks = document.querySelectorAll('.sidebar-link');
 const userName = document.getElementById('userName');
@@ -29,6 +30,11 @@ function toggleSidebar(open) {
 menuToggle.addEventListener('click', () => toggleSidebar(true));
 sidebarClose.addEventListener('click', () => toggleSidebar(false));
 sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
+sidebarToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('collapsed');
+  document.body.classList.toggle('sidebar-collapsed');
+  sidebarToggle.textContent = sidebar.classList.contains('collapsed') ? '▶' : '◀';
+});
 
 function updateSidebarUser(user) {
   userName.textContent = user.name || 'Usuario';
