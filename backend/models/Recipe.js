@@ -1,7 +1,7 @@
 const { pool } = require('../config/db');
 
 const Recipe = {
-  async findAll({ search, diet, page = 1, limit = 20 } = {}) {
+  async findAll({ search, diet, page = 1, limit = 100 } = {}) {
     let sql = 'SELECT * FROM recipes WHERE 1=1';
     const params = [];
     if (search) {

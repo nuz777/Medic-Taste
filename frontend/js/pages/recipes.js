@@ -58,9 +58,7 @@ export function renderRecipes(container) {
         return `
         <article class="recipe-card-full" data-id="${r.id}">
           <div class="recipe-card-full-image">
-            ${r.photo_url
-              ? `<img src="${r.photo_url}" alt="${r.name}" loading="lazy" onerror="var s=this;if(!s.dataset.f){s.dataset.f=1;s.src='${recipeImg}'}else if(!s.dataset.g){s.dataset.g=1;s.src='${recipeImgSvg}'}else{s.style.display='none';s.nextElementSibling.style.display='flex'}"><div class="recipe-card-full-image-fallback" style="display:none">🍽️</div>`
-              : `<img src="${recipeImg}" alt="${r.name}" loading="lazy" onerror="var s=this;if(!s.dataset.f){s.dataset.f=1;s.src='${recipeImgSvg}'}else{s.style.display='none';s.nextElementSibling.style.display='flex'}"><div class="recipe-card-full-image-fallback" style="display:none">🍽️</div>`}
+            <img src="${r.photo_url || recipeImg}" alt="${r.name}" loading="lazy" onerror="var s=this;if(!s.dataset.f){s.dataset.f=1;s.src='${recipeImg}'}else if(!s.dataset.g){s.dataset.g=1;s.src='${recipeImgSvg}'}else{s.style.display='none';s.nextElementSibling.style.display='flex'}"><div class="recipe-card-full-image-fallback" style="display:none">🍽️</div>
           </div>
           <div class="recipe-card-full-body">
             <h3>${r.name}</h3>
