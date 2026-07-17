@@ -2,6 +2,7 @@ import { renderDashboard } from './pages/dashboard.js';
 import { hasCompletedQuestionnaire } from './pages/questionnaire.js';
 import { renderRecipes } from './pages/recipes.js';
 import { renderPlanner } from './pages/planner.js';
+import { renderPlans } from './pages/plans.js';
 import { renderFavorites } from './pages/favorites.js';
 import { renderShopping } from './pages/shopping.js';
 import { renderProfile } from './pages/profile.js';
@@ -57,6 +58,7 @@ const routes = {
   dashboard: renderDashboard,
   recipes: renderRecipes,
   planner: renderPlanner,
+  plans: renderPlans,
   favorites: renderFavorites,
   shopping: renderShopping,
   profile: renderProfile,

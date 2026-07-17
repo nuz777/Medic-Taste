@@ -1,512 +1,397 @@
-.dashboard-banner {
-  position: relative;
-  border-radius: 14px;
-  overflow: hidden;
-  margin-bottom: 2.5rem;
-  min-height: 180px;
-  display: flex;
-  align-items: center;
-}
+/* ===========================
+   Dashboard — New layout
+   =========================== */
 
-.dashboard-banner::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url('../../assets/images/hero.jpg') no-repeat center 25%;
-  background-size: cover;
-}
-
-.dashboard-banner::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.25) 100%);
-}
-
-.dashboard-banner-content {
-  position: relative;
-  padding: 2rem 2.5rem;
-  z-index: 1;
-}
-
-.dashboard-banner-content h1 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 0.25rem;
-}
-
-.dashboard-banner-content p {
-  color: rgba(255,255,255,0.8);
-  font-size: 0.9rem;
-}
-
-.dashboard-banner-decoration {
-  position: absolute;
-  top: -30px;
-  right: -30px;
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.06);
-}
-
-.dashboard-banner-decoration::after {
-  content: '';
-  position: absolute;
-  top: 30px;
-  right: 30px;
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.06);
-}
-
-.stats-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  margin-bottom: 2.5rem;
-}
-
-.stat-card {
-  background: var(--surface);
-  border-radius: 10px;
-  padding: 1.25rem;
-  border: 1px solid var(--border-light);
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  transition: all 0.2s ease;
-}
-
-.stat-card:hover {
-  border-color: var(--primary);
-  box-shadow: 0 1px 6px rgba(0, 137, 123, 0.08);
-}
-
-.stat-card-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.stat-card-icon svg {
-  width: 20px;
-  height: 20px;
-}
-
-.stat-card-icon.green {
-  background: var(--primary-light);
-  color: var(--primary);
-}
-
-.stat-card-icon.green svg {
-  color: var(--primary);
-  stroke: var(--primary);
-}
-
-.stat-card-icon.orange {
-  background: var(--warning-light);
-  color: var(--warning);
-}
-
-.stat-card-icon.orange svg {
-  color: var(--warning);
-  stroke: var(--warning);
-}
-
-.stat-card-icon.red {
-  background: var(--error-light);
-  color: var(--error);
-}
-
-.stat-card-icon.red svg {
-  color: var(--error);
-  stroke: var(--error);
-}
-
-.stat-card-icon.blue {
-  background: #E3F2FD;
-  color: #1565C0;
-}
-
-.stat-card-icon.blue svg {
-  color: #1565C0;
-  stroke: #1565C0;
-}
-
-.stat-card-body {
-  flex: 1;
-  min-width: 0;
-}
-
-.stat-card-value {
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: var(--text);
-  line-height: 1.2;
-}
-
-.stat-card-label {
-  font-size: 0.78rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-.stat-card-change {
-  font-size: 0.72rem;
-  font-weight: 600;
-  margin-top: 0.2rem;
-}
-
-.stat-card-change.up {
-  color: var(--success);
-}
-
-.stat-card-change.down {
-  color: var(--error);
-}
-
-.quick-access {
-  margin-bottom: 2.5rem;
-}
-
-.quick-access h2 {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.quick-access-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-}
-
-.quick-card {
-  background: var(--surface);
-  border: 1px solid var(--border-light);
-  border-radius: 12px;
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-align: center;
-}
-
-.quick-card:hover {
-  border-color: var(--primary);
-  background: var(--primary-light);
-  transform: translateY(-2px);
-}
-
-.quick-card-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.quick-card-icon svg {
-  width: 24px;
-  height: 24px;
-}
-
-.quick-card span {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.quick-card small {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  display: block;
-  margin-top: 0.1rem;
-}
-
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.dashboard-card {
-  background: var(--surface);
-  border-radius: 12px;
-  border: 1px solid var(--border-light);
-  overflow: hidden;
-  transition: box-shadow 0.2s ease;
-}
-
-.dashboard-card:hover {
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
-}
-
-.dashboard-card-header {
-  padding: 1.25rem 1.5rem 0;
+/* --- Header --- */
+.dash-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 0.5rem;
 }
 
-.dashboard-card-header h3 {
-  font-size: 0.95rem;
-  font-weight: 600;
-}
-
-.dashboard-card-body {
-  padding: 1.25rem 1.5rem 1.5rem;
-}
-
-.progress-chart {
-  width: 100%;
-  height: 200px;
-  position: relative;
-}
-
-.chart-tooltip {
-  position: absolute;
-  z-index: 10;
-  background: var(--surface);
-  border: 1px solid var(--border-light);
-  border-radius: 8px;
-  padding: 0.6rem 0.75rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  width: 150px;
-  font-size: 0.75rem;
-  line-height: 1.5;
-  pointer-events: none;
-  animation: fadeIn 0.15s ease;
-}
-
-.chart-tooltip strong {
-  font-size: 0.8rem;
-  color: var(--primary);
-}
-
-.chart-tooltip-link {
-  display: block;
-  margin-top: 0.3rem;
-  font-size: 0.7rem;
-  color: var(--primary);
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.progress-summary {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.5rem;
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border-light);
-}
-
-.progress-stat {
-  text-align: center;
-}
-
-.progress-stat-value {
-  display: block;
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--primary);
-  line-height: 1.3;
-}
-
-.progress-stat-label {
-  display: block;
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-.meal-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.meal-item {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-  padding: 0.7rem 0.85rem;
-  border-radius: 8px;
-  background: var(--bg);
-  transition: background 0.2s ease;
-  cursor: pointer;
-}
-
-.meal-item:hover {
+.dash-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
   background: var(--primary-light);
-}
-
-.meal-item-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background: var(--surface);
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--primary);
+  font-weight: 700;
   font-size: 1rem;
-  flex-shrink: 0;
-  border: 1px solid var(--border-light);
-}
-
-.meal-item-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.meal-item-name {
-  font-weight: 600;
-  font-size: 0.85rem;
-}
-
-.meal-item-cal {
-  font-size: 0.78rem;
-  color: var(--text-secondary);
-}
-
-.meal-item-time {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  background: var(--bg-alt);
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-}
-
-.recipe-mini-list {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.85rem;
-}
-
-.recipe-mini-card {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  border-radius: 8px;
-  border: 1px solid var(--border-light);
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.recipe-mini-card:hover {
-  border-color: var(--primary);
-  background: var(--primary-light);
-}
-
-.recipe-mini-thumb {
-  width: 44px;
-  height: 44px;
-  border-radius: 8px;
-  background: var(--bg-alt);
-  flex-shrink: 0;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
-.recipe-mini-thumb img {
+.dash-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.recipe-mini-placeholder {
-  width: 100%;
-  height: 100%;
+.dash-bell {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border-light);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #fff;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.recipe-mini-info {
+.dash-bell:hover {
+  border-color: var(--primary);
+}
+
+.dash-bell svg {
+  width: 20px;
+  height: 20px;
+  color: var(--text-secondary);
+}
+
+.dash-bell-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--error);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--bg);
+}
+
+.dash-greeting {
+  margin-bottom: 1.25rem;
+}
+
+.dash-greeting h1 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.dash-greeting p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  margin-top: 0.15rem;
+}
+
+/* --- Meal cards row --- */
+.dash-meals {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.dash-meal-card {
+  border-radius: var(--radius);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dash-meal-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.dash-meal-card.breakfast {
+  background: var(--meal-breakfast-bg);
+}
+.dash-meal-card.lunch {
+  background: var(--meal-lunch-bg);
+}
+.dash-meal-card.dinner {
+  background: var(--meal-dinner-bg);
+}
+
+.dash-meal-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dash-meal-card.breakfast .dash-meal-icon {
+  background: rgba(240, 168, 48, 0.18);
+  color: var(--meal-breakfast-accent);
+}
+.dash-meal-card.lunch .dash-meal-icon {
+  background: rgba(0, 137, 123, 0.14);
+  color: var(--meal-lunch-accent);
+}
+.dash-meal-card.dinner .dash-meal-icon {
+  background: rgba(74, 127, 191, 0.14);
+  color: var(--meal-dinner-accent);
+}
+
+.dash-meal-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.dash-meal-info {
   flex: 1;
   min-width: 0;
 }
 
-.recipe-mini-name {
-  font-size: 0.82rem;
+.dash-meal-label {
+  font-size: 0.78rem;
   font-weight: 600;
+  color: var(--text);
 }
 
-.recipe-mini-meta {
+.dash-meal-kcal {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin-top: 0.1rem;
+}
+
+/* --- Food Log Focus --- */
+.dash-focus {
+  margin-bottom: 1.5rem;
+}
+
+.dash-focus-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.dash-focus-header span {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.dash-focus-header strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
+/* --- Calorie ring (main) --- */
+.dash-ring-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.dash-ring {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.dash-ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.dash-ring-bg {
+  fill: none;
+  stroke: var(--calorie-ring-bg);
+  stroke-width: 10;
+}
+
+.dash-ring-progress {
+  fill: none;
+  stroke: var(--calorie-ring);
+  stroke-width: 10;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dash-ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.dash-ring-value {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1;
+}
+
+.dash-ring-label {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.2rem;
+}
+
+/* --- Macro rings (small) --- */
+.dash-macros {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.dash-macro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.dash-macro-ring {
+  position: relative;
+  width: 72px;
+  height: 72px;
+}
+
+.dash-macro-ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.dash-macro-ring-bg {
+  fill: none;
+  stroke-width: 6;
+}
+
+.dash-macro-ring-progress {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dash-macro.protein .dash-macro-ring-bg { stroke: var(--macro-protein-light); }
+.dash-macro.protein .dash-macro-ring-progress { stroke: var(--macro-protein); }
+.dash-macro.carbs .dash-macro-ring-bg { stroke: var(--macro-carbs-light); }
+.dash-macro.carbs .dash-macro-ring-progress { stroke: var(--macro-carbs); }
+.dash-macro.fat .dash-macro-ring-bg { stroke: var(--macro-fat-light); }
+.dash-macro.fat .dash-macro-ring-progress { stroke: var(--macro-fat); }
+
+.dash-macro-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: capitalize;
+}
+
+.dash-macro-values {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* --- Insights section --- */
+.dash-insights {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+
+.dash-insights-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+}
+
+.dash-progress-bar {
+  width: 100%;
+  height: 10px;
+  background: var(--border-light);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.dash-progress-fill {
+  height: 100%;
+  border-radius: 5px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dash-progress-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
   font-size: 0.72rem;
   color: var(--text-muted);
 }
 
-.section-label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.dash-empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted);
+  font-size: 0.88rem;
 }
 
-.section-label a {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--primary);
-  margin-left: auto;
+.dash-empty-state .icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+  display: block;
 }
 
-.section-label a:hover {
-  text-decoration: underline;
-}
-
-@media (max-width: 1024px) {
-  .stats-row {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .quick-access-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .recipe-mini-list {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
+/* --- Responsive --- */
 @media (max-width: 480px) {
-  .stats-row {
+  .dash-meals {
     grid-template-columns: 1fr;
   }
 
-  .quick-access-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .dash-meal-card {
+    padding: 0.85rem;
   }
 
-  .recipe-mini-list {
-    grid-template-columns: 1fr;
+  .dash-macros {
+    gap: 0.5rem;
+  }
+
+  .dash-ring {
+    width: 170px;
+    height: 170px;
+  }
+
+  .dash-ring-value {
+    font-size: 2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .dash-ring {
+    width: 240px;
+    height: 240px;
+  }
+
+  .dash-ring-value {
+    font-size: 2.8rem;
+  }
+
+  .dash-macro-ring {
+    width: 84px;
+    height: 84px;
   }
 }

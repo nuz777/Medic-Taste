@@ -1,0 +1,314 @@
+/* ===========================
+   Plans / Progress view
+   =========================== */
+
+/* --- Header --- */
+.plans-header {
+  margin-bottom: 1.25rem;
+}
+
+.plans-header h1 {
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.plans-header p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  margin-top: 0.15rem;
+}
+
+/* --- Goal card --- */
+.plans-goal {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.plans-goal-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.plans-goal-title svg {
+  width: 18px;
+  height: 18px;
+  color: var(--primary);
+}
+
+.plans-goal-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.plans-goal-stat {
+  text-align: center;
+}
+
+.plans-goal-stat-value {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.plans-goal-stat-label {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  margin-top: 0.15rem;
+}
+
+/* --- Bar chart --- */
+.plans-chart {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.plans-chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.plans-chart-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.plans-chart-legend {
+  display: flex;
+  gap: 0.85rem;
+  align-items: center;
+}
+
+.plans-chart-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.plans-chart-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.plans-chart-select {
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: var(--font);
+  font-size: 0.75rem;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  outline: none;
+}
+
+.plans-chart-select:focus {
+  border-color: var(--primary);
+}
+
+/* Bar chart area */
+.plans-bars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.5rem;
+  height: 180px;
+  padding-top: 0.5rem;
+}
+
+.plans-bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.plans-bar-stack {
+  width: 100%;
+  max-width: 36px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px 4px 0 0;
+  overflow: hidden;
+  min-height: 4px;
+}
+
+.plans-bar-segment {
+  width: 100%;
+  transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 2px;
+}
+
+.plans-bar-segment.protein {
+  background: var(--macro-protein);
+}
+
+.plans-bar-segment.carbs {
+  background: var(--macro-carbs);
+}
+
+.plans-bar-segment.fat {
+  background: var(--macro-fat);
+}
+
+.plans-bar-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.plans-bar-value {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+/* --- Stats grid 2x2 --- */
+.plans-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.plans-stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 1.15rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.plans-stat-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.plans-stat-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.plans-stat-icon.heart {
+  background: #FEE2E2;
+  color: #DC2626;
+}
+
+.plans-stat-icon.water {
+  background: #DBEAFE;
+  color: #2563EB;
+}
+
+.plans-stat-icon.steps {
+  background: #FFF3E0;
+  color: #F57C00;
+}
+
+.plans-stat-icon.sleep {
+  background: #EDE9FC;
+  color: var(--insight-text);
+}
+
+.plans-stat-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.plans-stat-value {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.plans-stat-label {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+/* --- Empty state --- */
+.plans-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+/* --- Responsive --- */
+@media (max-width: 480px) {
+  .plans-goal-stats {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .plans-goal-stat {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: left;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .plans-goal-stat:last-child {
+    border-bottom: none;
+  }
+
+  .plans-bars {
+    height: 150px;
+  }
+
+  .plans-bar-stack {
+    max-width: 28px;
+  }
+
+  .plans-chart-legend {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .plans-stat-card {
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .plans-bars {
+    height: 220px;
+  }
+
+  .plans-bar-stack {
+    max-width: 42px;
+  }
+}
