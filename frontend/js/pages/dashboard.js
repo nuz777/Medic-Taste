@@ -2,6 +2,24 @@ import { get } from '../services/api.js';
 import { getUser } from '../services/authService.js';
 import { showToast } from '../utils/toast.js';
 
+function nameToSlug(name) {
+  return name
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+function recipeImgFallback(name, photoUrl) {
+  const slug = nameToSlug(name);
+  const jpg = `assets/images/recipes/${slug}.jpg`;
+  const svg = `assets/images/recipes/${slug}.svg`;
+  if (photoUrl) {
+    return `<img src="${photoUrl}" alt="${name}" loading="lazy" onerror="var s=this;if(!s.dataset.f){s.dataset.f=1;s.src='${jpg}'}else if(!s.dataset.g){s.dataset.g=1;s.src='${svg}'}else{s.style.display='none';s.nextElementSibling.style.display='flex'}"><div class="recipe-mini-placeholder" style="display:none">${name.charAt(0).toUpperCase()}</div>`;
+  }
+  return `<img src="${jpg}" alt="${name}" loading="lazy" onerror="var s=this;if(!s.dataset.f){s.dataset.f=1;s.src='${svg}'}else{s.style.display='none';s.nextElementSibling.style.display='flex'}"><div class="recipe-mini-placeholder" style="display:none">${name.charAt(0).toUpperCase()}</div>`;
+}
+
 function calculateStreak() {
   const plan = JSON.parse(localStorage.getItem('tf_week_plan') || '{}');
   const today = new Date();
@@ -288,10 +306,7 @@ async function loadRanking() {
         card.className = 'recipe-mini-card';
         card.innerHTML = `
           <div class="recipe-mini-thumb">
-            ${r.photo_url
-              ? `<img src="${r.photo_url}" alt="${r.name}" loading="lazy">`
-              : `<div class="recipe-mini-placeholder">${r.name.charAt(0).toUpperCase()}</div>`
-            }
+            ${recipeImgFallback(r.name, r.photo_url)}
           </div>
           <div class="recipe-mini-info">
             <div class="recipe-mini-name">${r.name}</div>

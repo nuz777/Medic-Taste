@@ -1,5 +1,23 @@
 import { get, del } from '../services/api.js';
 
+function nameToSlug(name) {
+  return name
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+function recipeImgFallback(name, photoUrl) {
+  const slug = nameToSlug(name);
+  const jpg = `assets/images/recipes/${slug}.jpg`;
+  const svg = `assets/images/recipes/${slug}.svg`;
+  if (photoUrl) {
+    return `<img src="${photoUrl}" alt="${name}" loading="lazy" onerror="var s=this;if(!s.dataset.f){s.dataset.f=1;s.src='${jpg}'}else if(!s.dataset.g){s.dataset.g=1;s.src='${svg}'}else{s.style.display='none';s.nextElementSibling.style.display='flex'}"><div class="recipe-card-full-placeholder" style="display:none">${name.charAt(0).toUpperCase()}</div>`;
+  }
+  return `<img src="${jpg}" alt="${name}" loading="lazy" onerror="var s=this;if(!s.dataset.f){s.dataset.f=1;s.src='${svg}'}else{s.style.display='none';s.nextElementSibling.style.display='flex'}"><div class="recipe-card-full-placeholder" style="display:none">${name.charAt(0).toUpperCase()}</div>`;
+}
+
 export async function renderFavorites(container) {
   container.innerHTML = `
     <div class="favorites-header">
@@ -34,10 +52,7 @@ export async function renderFavorites(container) {
     grid.innerHTML = favorites.map(f => `
       <article class="recipe-card-full" data-id="${f.recipe_id}">
         <div class="recipe-card-full-image">
-          ${f.photo_url
-            ? `<img src="${f.photo_url}" alt="${f.name || 'Receta'}" loading="lazy">`
-            : `<div class="recipe-card-full-placeholder">${(f.name || 'R').charAt(0).toUpperCase()}</div>`
-          }
+          ${recipeImgFallback(f.name || 'Receta', f.photo_url)}
         </div>
         <div class="recipe-card-full-body">
           <h3>${f.name || 'Receta'}</h3>

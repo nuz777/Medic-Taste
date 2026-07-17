@@ -2,6 +2,24 @@ import { get } from '../services/api.js';
 import { logUsage } from '../services/usage.js';
 import { showToast } from '../utils/toast.js';
 
+function nameToSlug(name) {
+  return name
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+function recipeImgTag(name, photoUrl) {
+  const slug = nameToSlug(name);
+  const jpg = `assets/images/recipes/${slug}.jpg`;
+  const svg = `assets/images/recipes/${slug}.svg`;
+  if (photoUrl) {
+    return `<img src="${photoUrl}" alt="${name}" loading="lazy" onerror="var s=this;if(!s.dataset.f){s.dataset.f=1;s.src='${jpg}'}else if(!s.dataset.g){s.dataset.g=1;s.src='${svg}'}else{s.style.display='none'}">`;
+  }
+  return `<img src="${jpg}" alt="${name}" loading="lazy" onerror="var s=this;if(!s.dataset.f){s.dataset.f=1;s.src='${svg}'}else{s.style.display='none'}">`;
+}
+
 const MEAL_ICONS = {
   desayuno: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>',
   almuerzo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M2 12h20"></path><path d="M2 18h20"></path><path d="M2 6h20"></path></svg>',
@@ -202,11 +220,9 @@ export function renderPlanner(container) {
           <button class="recipe-detail-close" id="detailClose">✕</button>
         </div>
 
-        ${recipe.photo_url ? `
-          <div class="recipe-detail-img">
-            <img src="${recipe.photo_url}" alt="${recipe.name}" loading="lazy">
-          </div>
-        ` : ''}
+        <div class="recipe-detail-img">
+          ${recipeImgTag(recipe.name, recipe.photo_url)}
+        </div>
 
         <div class="recipe-detail-meta">
           <span>
