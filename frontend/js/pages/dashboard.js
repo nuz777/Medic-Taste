@@ -19,21 +19,17 @@ export async function renderDashboard(container) {
   const firstName = user?.name?.split(' ')[0] || 'Usuario';
 
   container.innerHTML = `
-    <div class="dash-header">
-      <div class="dash-avatar" id="dashAvatar">
-        <svg viewBox="0 0 44 44" width="44" height="44">
-          <circle cx="22" cy="22" r="22" fill="var(--primary-light)"/>
-          <text x="22" y="22" text-anchor="middle" dominant-baseline="central" fill="var(--primary)" font-size="16" font-weight="700" font-family="Inter, sans-serif">${escapeHtml((firstName[0] || 'U').toUpperCase())}</text>
-        </svg>
+    <div class="dash-hero">
+      <div class="dash-hero-content">
+        <div class="dash-greeting">
+          <h1>Hola, ${escapeHtml(firstName)}!</h1>
+      
+        </div>
+        <div class="dash-bell" id="dashBell">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+        </div>
       </div>
-      <div class="dash-bell">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-      </div>
-    </div>
-
-    <div class="dash-greeting">
-      <h1>Hola, ${escapeHtml(firstName)}!</h1>
-      <p>Completa tu nutrición diaria</p>
+      <img src="assets/images/banner.png" alt="TasteFlow" class="dash-hero-bg">
     </div>
 
     <div class="dash-meals" id="dashMeals"></div>
@@ -110,6 +106,7 @@ export async function renderDashboard(container) {
 
   loadMealCards();
   loadNutrition();
+  setupBell();
 }
 
 function loadMealCards() {
@@ -226,4 +223,89 @@ function setMacroRing(macro, value, target) {
   circle.style.strokeDasharray = circumference;
   const pct = Math.min(1, value / target);
   circle.style.strokeDashoffset = circumference * (1 - pct);
+}
+
+const NOTIFICATIONS = [
+  { icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>', title: 'Planifica tu semana', desc: 'Organiza tus comidas en el planificador.', route: 'planner' },
+  { icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>', title: 'Explora nuevas recetas', desc: 'Descubre platillos saludables.', route: 'recipes' },
+  { icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>', title: 'Revisa tu progreso', desc: 'Mira cómo vas con tus macros.', route: 'plans' },
+  { icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>', title: 'Lista de compras', desc: 'No olvides los ingredientes.', route: 'shopping' },
+  { icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>', title: 'Tus favoritos', desc: 'Recetas guardadas que te esperan.', route: 'favorites' },
+  { icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>', title: 'Actualiza tu perfil', desc: 'Mantén tus datos al día.', route: 'profile' },
+];
+
+function setupBell() {
+  const bell = document.getElementById('dashBell');
+  if (!bell) return;
+
+  let panel = null;
+
+  bell.addEventListener('click', (e) => {
+    e.stopPropagation();
+
+    if (panel) {
+      panel.remove();
+      panel = null;
+      return;
+    }
+
+    panel = document.createElement('div');
+    panel.className = 'dash-notif-panel';
+
+    panel.innerHTML = `
+      <div class="dash-notif-header">Notificaciones</div>
+      ${NOTIFICATIONS.map(n => `
+        <a class="dash-notif-item" data-route="${n.route}">
+          <span class="dash-notif-icon">${n.icon}</span>
+          <div class="dash-notif-text">
+            <div class="dash-notif-title">${n.title}</div>
+            <div class="dash-notif-desc">${n.desc}</div>
+          </div>
+        </a>
+      `).join('')}
+    `;
+
+    panel.querySelectorAll('.dash-notif-item').forEach(item => {
+      item.addEventListener('click', () => {
+        window.location.hash = item.dataset.route;
+
+        panel.remove();
+        panel = null;
+      });
+    });
+
+    document.body.appendChild(panel);
+
+    const rect = bell.getBoundingClientRect();
+    const panelWidth = 300;
+
+    panel.style.left = `${rect.right - panelWidth}px`;
+    panel.style.top = `${rect.bottom + 8}px`;
+
+    const close = (ev) => {
+      if (!panel) return;
+
+      if (panel.contains(ev.target) || bell.contains(ev.target)) return;
+
+      panel.remove();
+      panel = null;
+      document.removeEventListener('click', close);
+      window.removeEventListener('resize', updatePosition);
+      window.removeEventListener('scroll', updatePosition, true);
+    };
+
+    const updatePosition = () => {
+      if (!panel) return;
+
+      const r = bell.getBoundingClientRect();
+
+      panel.style.left = `${r.right - panelWidth}px`;
+      panel.style.top = `${r.bottom + 8}px`;
+    };
+
+    window.addEventListener('resize', updatePosition);
+    window.addEventListener('scroll', updatePosition, true);
+
+    setTimeout(() => document.addEventListener('click', close), 0);
+  });
 }
