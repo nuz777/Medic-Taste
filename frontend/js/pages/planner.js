@@ -1,5 +1,6 @@
 import { get, post, del } from '../services/api.js';
 import { logUsage } from '../services/usage.js';
+import { escapeHtml } from '../utils/escapeHtml.js';
 
 const MEAL_TYPES = ['desayuno', 'almuerzo', 'cena', 'snack'];
 
@@ -15,7 +16,8 @@ const DAY_LABELS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 function getMonday(date) {
   const d = new Date(date);
   const day = d.getDay();
-  d.setDate(d.getDate() - day + (day === 0 ? -6 : 1));
+  const diff = day === 0 ? -6 : 1 - day;
+  d.setDate(d.getDate() + diff);
   d.setHours(0, 0, 0, 0);
   return d;
 }
@@ -137,7 +139,7 @@ export function renderPlanner(container) {
             <div class="planner-card-icon ${type}">${meta.icon}</div>
             <div class="planner-card-thumb">${thumbHTML}</div>
             <div class="planner-card-info">
-              <div class="planner-card-name">${m.recipe_name}</div>
+              <div class="planner-card-name">${escapeHtml(m.recipe_name)}</div>
               <div class="planner-card-meta">${meta.label}${m.prep_time_minutes ? ' · ' + m.prep_time_minutes + ' min' : ''}</div>
             </div>
             <div class="planner-card-actions">
@@ -219,7 +221,7 @@ export function renderPlanner(container) {
           <div class="planner-modal-recipe" data-id="${r.id}" data-name="${r.name}">
             <div class="planner-modal-recipe-icon">${MEAL_META.almuerzo.icon}</div>
             <div class="planner-modal-recipe-info">
-              <strong>${r.name}</strong>
+              <strong>${escapeHtml(r.name)}</strong>
               <small>${r.prep_time_minutes || '—'} min</small>
             </div>
           </div>
@@ -237,9 +239,10 @@ export function renderPlanner(container) {
       }
     }
 
+    let localSearchTimer;
     searchInput.addEventListener('input', () => {
-      clearTimeout(window._plannerSearchTimer);
-      window._plannerSearchTimer = setTimeout(() => searchRecipes(searchInput.value), 300);
+      clearTimeout(localSearchTimer);
+      localSearchTimer = setTimeout(() => searchRecipes(searchInput.value), 300);
     });
 
     searchRecipes('');

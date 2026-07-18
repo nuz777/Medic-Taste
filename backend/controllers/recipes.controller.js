@@ -1,5 +1,6 @@
 const Recipe = require('../models/Recipe');
 const UsageStats = require('../models/UsageStats');
+const { pool } = require('../config/db');
 
 exports.getAll = async (req, res, next) => {
   try {
@@ -12,14 +13,16 @@ exports.getById = async (req, res, next) => {
   try {
     const recipe = await Recipe.getFullRecipe(req.params.id);
     if (!recipe) return res.status(404).json({ error: 'Receta no encontrada' });
-    await UsageStats.log('recipe_viewed', recipe.id, req.user?.id);
+    if (req.user?.id) {
+      await UsageStats.log('recipe_viewed', recipe.id, req.user.id);
+    }
     res.json(recipe);
   } catch (err) { next(err); }
 };
 
 exports.create = async (req, res, next) => {
   try {
-    const id = await Recipe.create(req.body);
+    const id = await Recipe.create({ ...req.body, user_id: req.user.id });
     res.status(201).json({ id, message: 'Receta creada' });
   } catch (err) { next(err); }
 };
@@ -68,12 +71,23 @@ exports.getSteps = async (req, res, next) => {
 };
 
 exports.saveSteps = async (req, res, next) => {
+  const connection = await pool.getConnection();
   try {
     const { steps } = req.body;
-    await Recipe.clearSteps(req.params.id);
-    for (let i = 0; i < steps.length; i++) {
-      await Recipe.addStep(req.params.id, i + 1, steps[i].instruction, steps[i].timer_seconds);
+    if (!Array.isArray(steps)) {
+      return res.status(400).json({ error: 'steps debe ser un array' });
     }
+    await connection.beginTransaction();
+    await Recipe.clearSteps(req.params.id, connection);
+    for (let i = 0; i < steps.length; i++) {
+      await Recipe.addStep(req.params.id, i + 1, steps[i].instruction, steps[i].timer_seconds, connection);
+    }
+    await connection.commit();
     res.json({ message: 'Pasos guardados' });
-  } catch (err) { next(err); }
+  } catch (err) {
+    await connection.rollback();
+    next(err);
+  } finally {
+    connection.release();
+  }
 };

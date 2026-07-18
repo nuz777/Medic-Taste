@@ -1,4 +1,4 @@
-import { get, put, post } from '../services/api.js';
+import { get, post } from '../services/api.js';
 import { getUser, completeOnboarding } from '../services/authService.js';
 
 const STORAGE_KEY = 'tf_preferences';
@@ -305,7 +305,9 @@ async function generatePlan(container) {
     const weekPlan = {};
     const today = new Date();
     const monday = new Date(today);
-    monday.setDate(today.getDate() - today.getDay() + 1);
+    const dayOfWeek = today.getDay();
+    const mondayDiff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+    monday.setDate(today.getDate() + mondayDiff);
 
     const NUM_WEEKS = 4;
 

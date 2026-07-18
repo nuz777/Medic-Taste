@@ -45,6 +45,7 @@ exports.remove = async (req, res, next) => {
 exports.clearWeek = async (req, res, next) => {
   try {
     const { start, end } = req.body;
+    if (!start || !end) return res.status(400).json({ error: 'start y end son requeridos' });
     await MealPlan.clearWeek(req.user.id, start, end);
     res.json({ message: 'Semana limpiada' });
   } catch (err) { next(err); }

@@ -1,6 +1,10 @@
 const jwt = require('jsonwebtoken');
 
-const SECRET = process.env.JWT_SECRET || 'tasteflow-secret-dev';
+const SECRET = process.env.JWT_SECRET;
+if (!SECRET) {
+  console.error('FATAL: JWT_SECRET no está definido en las variables de entorno');
+  process.exit(1);
+}
 
 function authenticate(req, res, next) {
   const header = req.headers.authorization;

@@ -1,13 +1,7 @@
 import { get } from '../services/api.js';
 import { logUsage } from '../services/usage.js';
-
-function nameToSlug(name) {
-  return name
-    .toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '');
-}
+import { escapeHtml, escapeAttr } from '../utils/escapeHtml.js';
+import { nameToSlug } from '../utils/nameToSlug.js';
 
 export function renderRecipes(container) {
   container.innerHTML = `
@@ -55,13 +49,14 @@ export function renderRecipes(container) {
         const slug = nameToSlug(r.name);
         const recipeImg = `assets/images/recipes/${slug}.jpg`;
         const recipeImgSvg = `assets/images/recipes/${slug}.svg`;
+        const safeName = escapeHtml(r.name);
         return `
         <article class="recipe-card-full" data-id="${r.id}">
           <div class="recipe-card-full-image">
-            <img src="${r.photo_url || recipeImg}" alt="${r.name}" loading="lazy" onerror="var s=this;if(!s.dataset.f){s.dataset.f=1;s.src='${recipeImg}'}else if(!s.dataset.g){s.dataset.g=1;s.src='${recipeImgSvg}'}else{s.style.display='none';s.nextElementSibling.style.display='flex'}"><div class="recipe-card-full-image-fallback" style="display:none">🍽️</div>
+            <img src="${r.photo_url || recipeImg}" alt="${safeName}" loading="lazy" onerror="var s=this;if(!s.dataset.f){s.dataset.f=1;s.src='${recipeImg}'}else if(!s.dataset.g){s.dataset.g=1;s.src='${recipeImgSvg}'}else{s.style.display='none';s.nextElementSibling.style.display='flex'}"><div class="recipe-card-full-image-fallback" style="display:none">🍽️</div>
           </div>
           <div class="recipe-card-full-body">
-            <h3>${r.name}</h3>
+            <h3>${safeName}</h3>
             <div class="recipe-card-full-meta">
               <span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:0.2rem"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
@@ -72,7 +67,7 @@ export function renderRecipes(container) {
                 ${r.servings || '—'} porc.
               </span>
             </div>
-            ${r.diet_tags ? `<div class="recipe-card-full-tags">${r.diet_tags.split(',').map(t => `<span class="tag tag-primary">${t.trim()}</span>`).join('')}</div>` : ''}
+            ${r.diet_tags ? `<div class="recipe-card-full-tags">${r.diet_tags.split(',').map(t => `<span class="tag tag-primary">${escapeHtml(t.trim())}</span>`).join('')}</div>` : ''}
           </div>
         </article>
       `}).join('');
@@ -102,18 +97,19 @@ async function showRecipeDetail(id) {
     const slug = nameToSlug(recipe.name);
     const recipeImg = `assets/images/recipes/${slug}.jpg`;
     const recipeImgSvg = `assets/images/recipes/${slug}.svg`;
+    const safeName = escapeHtml(recipe.name);
     const overlay = document.createElement('div');
     overlay.className = 'recipe-detail-overlay';
     overlay.innerHTML = `
       <div class="recipe-detail-card">
         <div class="recipe-detail-image">
           ${recipe.photo_url
-            ? `<img src="${recipe.photo_url}" alt="${recipe.name}" loading="lazy" onerror="var s=this;if(!s.dataset.f){s.dataset.f=1;s.src='${recipeImg}'}else if(!s.dataset.g){s.dataset.g=1;s.src='${recipeImgSvg}'}else{s.style.display='none'}">`
-            : `<img src="${recipeImg}" alt="${recipe.name}" loading="lazy" onerror="var s=this;if(!s.dataset.f){s.dataset.f=1;s.src='${recipeImgSvg}'}else{s.style.display='none'}">`}
+            ? `<img src="${recipe.photo_url}" alt="${safeName}" loading="lazy" onerror="var s=this;if(!s.dataset.f){s.dataset.f=1;s.src='${recipeImg}'}else if(!s.dataset.g){s.dataset.g=1;s.src='${recipeImgSvg}'}else{s.style.display='none'}">`
+            : `<img src="${recipeImg}" alt="${safeName}" loading="lazy" onerror="var s=this;if(!s.dataset.f){s.dataset.f=1;s.src='${recipeImgSvg}'}else{s.style.display='none'}">`}
         </div>
 
         <div class="recipe-detail-header">
-          <h2>${recipe.name}</h2>
+          <h2>${safeName}</h2>
           <button class="recipe-detail-close" id="detailClose">✕</button>
         </div>
 
@@ -126,18 +122,18 @@ async function showRecipeDetail(id) {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:0.25rem"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path><line x1="8" y1="7" x2="16" y2="7"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
             ${recipe.servings || '—'} porciones
           </span>
-          ${recipe.diet_tags ? recipe.diet_tags.split(',').map(t => `<span class="tag tag-primary">${t.trim()}</span>`).join('') : ''}
+          ${recipe.diet_tags ? recipe.diet_tags.split(',').map(t => `<span class="tag tag-primary">${escapeHtml(t.trim())}</span>`).join('') : ''}
         </div>
 
-        ${recipe.description ? `<p style="margin-bottom:1.5rem;color:var(--text-secondary)">${recipe.description}</p>` : ''}
+        ${recipe.description ? `<p style="margin-bottom:1.5rem;color:var(--text-secondary)">${escapeHtml(recipe.description)}</p>` : ''}
 
         ${recipe.ingredients?.length ? `
           <div class="recipe-detail-section">
             <h4>Ingredientes</h4>
             <ul>${recipe.ingredients.map(i => {
-              const slug = nameToSlug(i.name);
-              const img = `assets/images/ingredients/${slug}.jpg`;
-              return `<li class="ingredient-item">${i.amount} ${i.unit} de ${i.name}<span class="ingredient-tooltip"><img src="${img}" alt="${i.name}" loading="lazy" onerror="var s=this;var p=s.closest('.ingredient-tooltip');if(!s.dataset.f){s.dataset.f=1;s.src='assets/images/ingredients/${slug}.svg'}else{p.style.display='none'}"></span></li>`;
+              const iSlug = nameToSlug(i.name);
+              const img = `assets/images/ingredients/${iSlug}.jpg`;
+              return `<li class="ingredient-item">${i.amount} ${i.unit} de ${escapeHtml(i.name)}<span class="ingredient-tooltip"><img src="${img}" alt="${escapeHtml(i.name)}" loading="lazy" onerror="var s=this;var p=s.closest('.ingredient-tooltip');if(!s.dataset.f){s.dataset.f=1;s.src='assets/images/ingredients/${iSlug}.svg'}else{p.style.display='none'}"></span></li>`;
             }).join('')}</ul>
           </div>
         ` : ''}
@@ -145,7 +141,7 @@ async function showRecipeDetail(id) {
         ${recipe.steps?.length ? `
           <div class="recipe-detail-section">
             <h4>Pasos</h4>
-            <ol class="recipe-detail-steps">${recipe.steps.map(s => `<li>${s.instruction}${s.timer_seconds ? ` <span class="tag tag-primary"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:0.2rem"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> ${s.timer_seconds >= 60 ? Math.floor(s.timer_seconds / 60) + 'm' + (s.timer_seconds % 60 ? ' ' + (s.timer_seconds % 60) + 's' : '') : s.timer_seconds + 's'}</span>` : ''}</li>`).join('')}</ol>
+            <ol class="recipe-detail-steps">${recipe.steps.map(s => `<li>${escapeHtml(s.instruction)}${s.timer_seconds ? ` <span class="tag tag-primary"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:0.2rem"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> ${s.timer_seconds >= 60 ? Math.floor(s.timer_seconds / 60) + 'm' + (s.timer_seconds % 60 ? ' ' + (s.timer_seconds % 60) + 's' : '') : s.timer_seconds + 's'}</span>` : ''}</li>`).join('')}</ol>
           </div>
         ` : ''}
 

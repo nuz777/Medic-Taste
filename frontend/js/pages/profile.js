@@ -1,14 +1,14 @@
 import { getUser, logout, resetOnboarding, uploadProfilePhoto } from '../services/authService.js';
 import { loadPreferences, hasCompletedQuestionnaire } from './questionnaire.js';
-
-const API_URL = 'http://localhost:3000';
+import { CONFIG } from '../config.js';
+import { escapeHtml } from '../utils/escapeHtml.js';
 
 export function renderProfile(container) {
   const user = getUser();
   const prefs = loadPreferences();
   const done = hasCompletedQuestionnaire();
 
-  const photoUrl = user?.photo_url ? `${API_URL}${user.photo_url}` : null;
+  const photoUrl = user?.photo_url ? `${CONFIG.API_BASE_URL}${user.photo_url}` : null;
 
   container.innerHTML = `
     <div class="profile-header">
@@ -23,7 +23,7 @@ export function renderProfile(container) {
         <div class="profile-avatar" id="profileAvatar">
           ${photoUrl
             ? `<img src="${photoUrl}" alt="Foto de perfil" />`
-            : `<span>${(user?.name || 'U')[0].toUpperCase()}</span>`
+            : `<span>${escapeHtml((user?.name || 'U')[0].toUpperCase())}</span>`
           }
         </div>
         <button class="btn btn-outline btn-sm" id="uploadPhotoBtn">
@@ -35,11 +35,11 @@ export function renderProfile(container) {
 
       <div class="profile-card-field">
         <label>Nombre</label>
-        <p>${user?.name || '—'}</p>
+        <p>${escapeHtml(user?.name || '—')}</p>
       </div>
       <div class="profile-card-field">
         <label>Email</label>
-        <p>${user?.email || '—'}</p>
+        <p>${escapeHtml(user?.email || '—')}</p>
       </div>
 
       ${done && prefs ? `
@@ -48,9 +48,9 @@ export function renderProfile(container) {
           <div class="profile-pref-tags">
             ${prefs.diet ? `<span class="tag tag-primary">${getDietLabel(prefs.diet)}</span>` : ''}
             ${prefs.goal ? `<span class="tag tag-success">${getGoalLabel(prefs.goal)}</span>` : ''}
-            ${prefs.meals ? `<span class="tag tag-primary">${prefs.meals} comidas/día</span>` : ''}
+            ${prefs.meals ? `<span class="tag tag-primary">${escapeHtml(prefs.meals)} comidas/día</span>` : ''}
             ${prefs.cookTime ? `<span class="tag tag-primary">${getCookTimeLabel(prefs.cookTime)}</span>` : ''}
-            ${Array.isArray(prefs.allergies) ? prefs.allergies.filter(a => a !== 'none').map(a => `<span class="tag" style="background:var(--error-light);color:var(--error)">${a}</span>`).join('') : ''}
+            ${Array.isArray(prefs.allergies) ? prefs.allergies.filter(a => a !== 'none').map(a => `<span class="tag" style="background:var(--error-light);color:var(--error)">${escapeHtml(a)}</span>`).join('') : ''}
           </div>
         </div>
       ` : `
@@ -66,7 +66,7 @@ export function renderProfile(container) {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
           Repetir cuestionario
         </button>
-        <button class="btn btn-outline" id="logoutBtn";margin-left:auto">
+        <button class="btn btn-outline" id="logoutBtn" style="margin-left:auto">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
           Cerrar sesión
         </button>
@@ -96,12 +96,12 @@ export function renderProfile(container) {
     try {
       const data = await uploadProfilePhoto(file);
       const avatar = document.getElementById('profileAvatar');
-      avatar.innerHTML = `<img src="${API_URL}${data.photo_url}?t=${Date.now()}" alt="Foto de perfil" />`;
+      avatar.innerHTML = `<img src="${CONFIG.API_BASE_URL}${data.photo_url}?t=${Date.now()}" alt="Foto de perfil" />`;
       const sidebarAvatar = document.getElementById('userAvatar');
       if (sidebarAvatar) {
         sidebarAvatar.innerHTML = '';
         const img = document.createElement('img');
-        img.src = `${API_URL}${data.photo_url}?t=${Date.now()}`;
+        img.src = `${CONFIG.API_BASE_URL}${data.photo_url}?t=${Date.now()}`;
         img.alt = 'Foto de perfil';
         sidebarAvatar.appendChild(img);
       }

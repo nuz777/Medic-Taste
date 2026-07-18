@@ -1,3 +1,5 @@
+import { escapeHtml } from './escapeHtml.js';
+
 let toastContainer = null;
 
 function ensureContainer() {
@@ -50,7 +52,7 @@ export function showToast(message, type = 'info', duration = 4000) {
     animation:toastSlideIn 0.35s cubic-bezier(0.4,0,0.2,1) forwards;
     max-width:320px;
   `;
-  toast.innerHTML = `<span style="flex-shrink:0;display:flex">${icons[type] || icons.info}</span><span>${message}</span>`;
+  toast.innerHTML = `<span style="flex-shrink:0;display:flex">${icons[type] || icons.info}</span><span>${escapeHtml(message)}</span>`;
 
   container.appendChild(toast);
 

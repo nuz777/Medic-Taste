@@ -1,5 +1,7 @@
 import { get } from '../services/api.js';
 import { getUser } from '../services/authService.js';
+import { CONFIG } from '../config.js';
+import { escapeHtml } from '../utils/escapeHtml.js';
 
 const CALORIE_TARGET = 2000;
 const MACRO_TARGETS = { protein: 77, carbs: 136, fat: 40 };
@@ -11,7 +13,7 @@ const MEAL_ICONS = {
 };
 
 const MEAL_CLASSES = { desayuno: 'breakfast', almuerzo: 'lunch', cena: 'dinner' };
-const MEAL_LABELS = { desayuno: 'Breakfast', almuerzo: 'Lunch', cena: 'Dinner' };
+const MEAL_LABELS = { desayuno: 'Desayuno', almuerzo: 'Almuerzo', cena: 'Cena' };
 
 export async function renderDashboard(container) {
   const user = getUser();
@@ -19,27 +21,26 @@ export async function renderDashboard(container) {
 
   container.innerHTML = `
     <div class="dash-header">
-      <div class="dash-avatar" id="dashAvatar">${(firstName[0] || 'U').toUpperCase()}</div>
+      <div class="dash-avatar" id="dashAvatar">${escapeHtml((firstName[0] || 'U').toUpperCase())}</div>
       <div class="dash-bell">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-        <span class="dash-bell-badge">2</span>
       </div>
     </div>
 
     <div class="dash-greeting">
-      <h1>Hello, ${firstName}!</h1>
-      <p>Complete your daily nutrition</p>
+      <h1>Hola, ${escapeHtml(firstName)}!</h1>
+      <p>Completa tu nutrición diaria</p>
     </div>
 
     <div class="dash-meals" id="dashMeals"></div>
 
     <div class="dash-focus">
       <div class="dash-focus-header">
-        <span>Food Log Focus</span>
+        <span>Registro de comidas</span>
       </div>
       <div class="dash-focus-header" style="margin-top:0.25rem">
-        <span>Remaining <strong id="dashRemaining">--</strong></span>
-        <span>Target <strong id="dashTarget">${CALORIE_TARGET}</strong></span>
+        <span>Restante <strong id="dashRemaining">--</strong></span>
+        <span>Objetivo <strong id="dashTarget">${CALORIE_TARGET}</strong></span>
       </div>
     </div>
 
@@ -51,7 +52,7 @@ export async function renderDashboard(container) {
         </svg>
         <div class="dash-ring-center">
           <span class="dash-ring-value" id="dashCalValue">--</span>
-          <span class="dash-ring-label">Consumed</span>
+          <span class="dash-ring-label">Consumido</span>
         </div>
       </div>
     </div>
@@ -64,7 +65,7 @@ export async function renderDashboard(container) {
             <circle class="dash-macro-ring-progress" data-macro="protein" cx="36" cy="36" r="30"></circle>
           </svg>
         </div>
-        <span class="dash-macro-label">Protein</span>
+        <span class="dash-macro-label">Proteína</span>
         <span class="dash-macro-values" id="dashProteinVal">0/${MACRO_TARGETS.protein}g</span>
       </div>
       <div class="dash-macro carbs">
@@ -74,7 +75,7 @@ export async function renderDashboard(container) {
             <circle class="dash-macro-ring-progress" data-macro="carbs" cx="36" cy="36" r="30"></circle>
           </svg>
         </div>
-        <span class="dash-macro-label">Carbs</span>
+        <span class="dash-macro-label">Carbohidratos</span>
         <span class="dash-macro-values" id="dashCarbsVal">0/${MACRO_TARGETS.carbs}g</span>
       </div>
       <div class="dash-macro fat">
@@ -84,18 +85,18 @@ export async function renderDashboard(container) {
             <circle class="dash-macro-ring-progress" data-macro="fat" cx="36" cy="36" r="30"></circle>
           </svg>
         </div>
-        <span class="dash-macro-label">Fat</span>
+        <span class="dash-macro-label">Grasas</span>
         <span class="dash-macro-values" id="dashFatVal">0/${MACRO_TARGETS.fat}g</span>
       </div>
     </div>
 
     <div class="dash-insights">
-      <div class="dash-insights-title">Insights</div>
+      <div class="dash-insights-title">Resumen</div>
       <div class="dash-progress-bar">
         <div class="dash-progress-fill" id="dashInsightFill" style="width:0%"></div>
       </div>
       <div class="dash-progress-labels">
-        <span id="dashInsightLabel">Goal Achievement</span>
+        <span id="dashInsightLabel">Logro del objetivo</span>
         <span id="dashInsightPct">0%</span>
       </div>
     </div>
@@ -103,7 +104,7 @@ export async function renderDashboard(container) {
 
   if (user?.photo_url) {
     const avatar = document.getElementById('dashAvatar');
-    avatar.innerHTML = `<img src="http://localhost:3000${user.photo_url}" alt="${firstName}">`;
+    avatar.innerHTML = `<img src="${CONFIG.API_BASE_URL}${user.photo_url}" alt="${escapeHtml(firstName)}">`;
   }
 
   loadMealCards();
@@ -127,8 +128,7 @@ function loadMealCards() {
     el.innerHTML = Object.entries(typeMeals).map(([type, meal]) => {
       const cls = MEAL_CLASSES[type];
       const label = MEAL_LABELS[type];
-      const name = meal ? meal.recipe_name : 'Not planned';
-      const kcal = meal ? '' : '';
+      const name = meal ? escapeHtml(meal.recipe_name) : 'Sin planificar';
       return `
         <div class="dash-meal-card ${cls}">
           <div class="dash-meal-icon">${MEAL_ICONS[type] || ''}</div>
@@ -144,7 +144,7 @@ function loadMealCards() {
         <div class="dash-meal-icon">${MEAL_ICONS[type] || ''}</div>
         <div class="dash-meal-info">
           <div class="dash-meal-label">${MEAL_LABELS[type]}</div>
-          <div class="dash-meal-kcal">Not planned</div>
+          <div class="dash-meal-kcal">Sin planificar</div>
         </div>
       </div>`).join('');
   }
@@ -174,7 +174,7 @@ async function loadNutrition() {
     const pct = Math.min(100, Math.round((consumed / CALORIE_TARGET) * 100));
     document.getElementById('dashInsightFill').style.width = pct + '%';
     document.getElementById('dashInsightPct').textContent = pct + '%';
-    document.getElementById('dashInsightLabel').textContent = `Goal Achievement ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - Now`;
+    document.getElementById('dashInsightLabel').textContent = `Logro del objetivo ${new Date().toLocaleDateString('es-CO', { month: 'short', day: 'numeric' })} - Ahora`;
   } catch {
     document.getElementById('dashCalValue').textContent = '--';
   }

@@ -192,7 +192,7 @@
 }
 
 .shop-card-img-placeholder span {
-  font-size: 0.25rem;
+  font-size: 0.55rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -207,7 +207,7 @@
 }
 
 .shop-card-category {
-  font-size: 0.32rem;
+  font-size: 0.55rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -220,7 +220,7 @@
 }
 
 .shop-card-name {
-  font-size: 0.5rem;
+  font-size: 0.7rem;
   font-weight: 700;
   color: #111827;
   line-height: 1.2;
@@ -231,7 +231,7 @@
 }
 
 .shop-card-unit {
-  font-size: 0.35rem;
+  font-size: 0.6rem;
   color: #9CA3AF;
   font-weight: 500;
 }
@@ -245,7 +245,7 @@
 }
 
 .shop-card-price {
-  font-size: 0.52rem;
+  font-size: 0.65rem;
   font-weight: 800;
   color: #111827;
   letter-spacing: -0.01em;
@@ -735,3 +735,60 @@
     gap: 0.35rem;
   }
 }
+
+/* ===========================
+   Dark mode overrides
+   =========================== */
+.dark .shop-page-header h1 { color: #F3F4F6; }
+.dark .shop-page-header p { color: #9CA3AF; }
+.dark .shop-search-wrap svg { color: #6B7280; }
+.dark .shop-search { background: #1F2937; border-color: #374151; color: #F3F4F6; }
+.dark .shop-search::placeholder { color: #6B7280; }
+.dark .shop-search:focus { border-color: #059669; box-shadow: 0 0 0 3px rgba(5,150,105,0.2); }
+.dark .shop-diet-bar { background: #052e16; border-color: #166534; color: #86EFAC; }
+.dark .shop-pill { background: #1F2937; border-color: #374151; color: #9CA3AF; }
+.dark .shop-pill:hover { border-color: #059669; color: #34D399; background: #052e16; }
+.dark .shop-pill.active { background: #059669; border-color: #059669; color: #fff; }
+.dark .shop-card { background: #1F2937; border-color: #374151; }
+.dark .shop-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+.dark .shop-card-img { background: #111827; border-bottom-color: #374151; }
+.dark .shop-card-img-placeholder { color: #4B5563; }
+.dark .shop-card-category { color: #34D399; background: rgba(5,150,105,0.15); }
+.dark .shop-card-name { color: #F3F4F6; }
+.dark .shop-card-unit { color: #6B7280; }
+.dark .shop-card-price { color: #F3F4F6; }
+.dark .shop-card-add { background: #059669; color: #fff; }
+.dark .shop-card-add.in-cart { background: rgba(5,150,105,0.2); color: #34D399; }
+.dark .shop-pagination { border-top-color: #374151; }
+.dark .shop-page-btn { background: #1F2937; border-color: #374151; color: #9CA3AF; }
+.dark .shop-page-btn:hover:not(:disabled) { border-color: #059669; color: #34D399; background: #052e16; }
+.dark .shop-page-info { color: #6B7280; }
+.dark .shop-cart { background: #1F2937; border-color: #374151; }
+.dark .shop-cart-header { border-bottom-color: #374151; }
+.dark .shop-cart-title { color: #F3F4F6; }
+.dark .shop-cart-row { border-bottom-color: #374151; }
+.dark .shop-cart-row:hover { background: #374151; }
+.dark .shop-cart-row-name { color: #F3F4F6; }
+.dark .shop-cart-row-unit { color: #6B7280; }
+.dark .shop-cart-row-price { color: #34D399; }
+.dark .shop-cart-empty { color: #6B7280; }
+.dark .shop-qty { background: #111827; border-color: #374151; }
+.dark .shop-qty button { color: #9CA3AF; }
+.dark .shop-qty button:hover { background: #374151; color: #F3F4F6; }
+.dark .shop-qty span { color: #F3F4F6; }
+.dark .shop-cart-row-del { color: #4B5563; }
+.dark .shop-cart-row-del:hover { background: rgba(220,38,38,0.15); color: #F87171; }
+.dark .shop-cart-footer { background: #1F2937; border-top-color: #374151; }
+.dark .shop-cart-total-label { color: #9CA3AF; }
+.dark .shop-cart-total-value { color: #F3F4F6; }
+.dark .shop-empty { color: #6B7280; }
+.dark .shop-empty svg { color: #4B5563; }
+.dark .shop-modal { background: #1F2937; }
+.dark .shop-modal h3 { color: #F3F4F6; }
+.dark .shop-modal-list li { border-bottom-color: #374151; }
+.dark .shop-modal-list .item-name { color: #F3F4F6; }
+.dark .shop-modal-list .item-price { color: #34D399; }
+.dark .shop-modal-total { border-top-color: #374151; color: #F3F4F6; }
+.dark .shop-modal-total span:last-child { color: #34D399; }
+.dark .shop-modal-btn { background: #1F2937; border-color: #374151; color: #D1D5DB; }
+.dark .shop-modal-btn:hover { border-color: #059669; color: #34D399; }

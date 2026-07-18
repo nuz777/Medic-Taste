@@ -1,12 +1,6 @@
 import { get, del } from '../services/api.js';
-
-function nameToSlug(name) {
-  return name
-    .toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '');
-}
+import { escapeHtml } from '../utils/escapeHtml.js';
+import { nameToSlug } from '../utils/nameToSlug.js';
 
 function recipeImgFallback(name, photoUrl) {
   const slug = nameToSlug(name);
@@ -52,10 +46,10 @@ export async function renderFavorites(container) {
     grid.innerHTML = favorites.map(f => `
       <article class="recipe-card-full" data-id="${f.recipe_id}">
         <div class="recipe-card-full-image">
-          ${recipeImgFallback(f.name || 'Receta', f.photo_url)}
+          ${recipeImgFallback(escapeHtml(f.name || 'Receta'), f.photo_url)}
         </div>
         <div class="recipe-card-full-body">
-          <h3>${f.name || 'Receta'}</h3>
+          <h3>${escapeHtml(f.name || 'Receta')}</h3>
           <button class="btn btn-outline" style="width:100%;margin-top:0.75rem;font-size:0.8rem" data-remove="${f.recipe_id}">Quitar de favoritos</button>
         </div>
       </article>

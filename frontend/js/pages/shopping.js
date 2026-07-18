@@ -1,5 +1,6 @@
 import { get } from '../services/api.js';
 import { logUsage } from '../services/usage.js';
+import { escapeHtml } from '../utils/escapeHtml.js';
 
 const CART_KEY = 'tf_shopping_cart';
 const DIET_KEY = 'tf_shop_show_all';
@@ -214,7 +215,7 @@ export function renderShopping(container) {
             </div>
             <div class="shop-card-body">
               <span class="shop-card-category">${(ing.category || 'General').substring(0, 15)}</span>
-              <div class="shop-card-name" title="${ing.name}">${name}</div>
+              <div class="shop-card-name" title="${escapeHtml(ing.name)}">${escapeHtml(name)}</div>
               ${unit ? `<span class="shop-card-unit">${unit}</span>` : ''}
             </div>
             <div class="shop-card-footer">
@@ -335,7 +336,7 @@ export function renderShopping(container) {
       return `
         <div class="shop-cart-row">
           <div class="shop-cart-row-info">
-            <div class="shop-cart-row-name">${it.name}</div>
+            <div class="shop-cart-row-name">${escapeHtml(it.name)}</div>
             ${it.unit ? `<div class="shop-cart-row-unit">${it.unit}</div>` : ''}
             <div class="shop-cart-row-price">${formatCOP(it.price)} × ${it.qty} = ${formatCOP(sub)}</div>
           </div>

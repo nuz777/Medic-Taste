@@ -24,7 +24,13 @@ async function request(endpoint, options = {}) {
     headers,
   });
 
-  const data = await res.json();
+  let data;
+  const contentType = res.headers.get('content-type') || '';
+  if (contentType.includes('application/json')) {
+    data = await res.json();
+  } else {
+    data = { error: await res.text() || 'Error en la solicitud' };
+  }
 
   if (!res.ok) {
     throw new ApiError(res.status, data.message || data.error || 'Error en la solicitud');
@@ -65,7 +71,13 @@ export function upload(endpoint, formData) {
     headers,
     body: formData,
   }).then(async res => {
-    const data = await res.json();
+    let data;
+    const contentType = res.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) {
+      data = await res.json();
+    } else {
+      data = { error: await res.text() || 'Error en la solicitud' };
+    }
     if (!res.ok) throw new ApiError(res.status, data.message || data.error || 'Error en la solicitud');
     return data;
   });

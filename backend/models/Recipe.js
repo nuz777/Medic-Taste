@@ -76,7 +76,7 @@ const Recipe = {
 
   async addIngredient(recipeId, ingredientId, amount, unit) {
     await pool.query(
-      'INSERT INTO recipe_ingredients (recipe_id, ingredient_id, amount, unit) VALUES (?, ?, ?, ?)',
+      'INSERT INTO recipe_ingredients (recipe_id, ingredient_id, amount, unit) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE amount = VALUES(amount), unit = VALUES(unit)',
       [recipeId, ingredientId, amount, unit]
     );
   },
@@ -88,15 +88,17 @@ const Recipe = {
     );
   },
 
-  async addStep(recipeId, stepNumber, instruction, timerSeconds) {
-    await pool.query(
+  async addStep(recipeId, stepNumber, instruction, timerSeconds, conn) {
+    const q = conn || pool;
+    await q.query(
       'INSERT INTO recipe_steps (recipe_id, step_number, instruction, timer_seconds) VALUES (?, ?, ?, ?)',
       [recipeId, stepNumber, instruction, timerSeconds || null]
     );
   },
 
-  async clearSteps(recipeId) {
-    await pool.query('DELETE FROM recipe_steps WHERE recipe_id = ?', [recipeId]);
+  async clearSteps(recipeId, conn) {
+    const q = conn || pool;
+    await q.query('DELETE FROM recipe_steps WHERE recipe_id = ?', [recipeId]);
   },
 
   async getFullRecipe(id) {
