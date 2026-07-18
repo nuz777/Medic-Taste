@@ -61,26 +61,4 @@ export function del(endpoint) {
   return request(endpoint, { method: 'DELETE' });
 }
 
-export function upload(endpoint, formData) {
-  const token = localStorage.getItem(CONFIG.STORAGE_KEYS.TOKEN);
-  const headers = {};
-  if (token) headers['Authorization'] = `Bearer ${token}`;
-
-  return fetch(`${CONFIG.API_URL}${endpoint}`, {
-    method: 'PUT',
-    headers,
-    body: formData,
-  }).then(async res => {
-    let data;
-    const contentType = res.headers.get('content-type') || '';
-    if (contentType.includes('application/json')) {
-      data = await res.json();
-    } else {
-      data = { error: await res.text() || 'Error en la solicitud' };
-    }
-    if (!res.ok) throw new ApiError(res.status, data.message || data.error || 'Error en la solicitud');
-    return data;
-  });
-}
-
 export { ApiError };

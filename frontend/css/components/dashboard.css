@@ -133,15 +133,15 @@
 }
 
 .dash-meal-card.breakfast .dash-meal-icon {
-  background: rgba(240, 168, 48, 0.18);
+  background: var(--warning-light);
   color: var(--meal-breakfast-accent);
 }
 .dash-meal-card.lunch .dash-meal-icon {
-  background: rgba(0, 137, 123, 0.14);
+  background: var(--primary-light);
   color: var(--meal-lunch-accent);
 }
 .dash-meal-card.dinner .dash-meal-icon {
-  background: rgba(74, 127, 191, 0.14);
+  background: var(--macro-carbs-light);
   color: var(--meal-dinner-accent);
 }
 

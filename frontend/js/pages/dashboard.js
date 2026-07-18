@@ -1,6 +1,5 @@
 import { get } from '../services/api.js';
 import { getUser } from '../services/authService.js';
-import { CONFIG } from '../config.js';
 import { escapeHtml } from '../utils/escapeHtml.js';
 
 const CALORIE_TARGET = 2000;
@@ -21,7 +20,12 @@ export async function renderDashboard(container) {
 
   container.innerHTML = `
     <div class="dash-header">
-      <div class="dash-avatar" id="dashAvatar">${escapeHtml((firstName[0] || 'U').toUpperCase())}</div>
+      <div class="dash-avatar" id="dashAvatar">
+        <svg viewBox="0 0 44 44" width="44" height="44">
+          <circle cx="22" cy="22" r="22" fill="var(--primary-light)"/>
+          <text x="22" y="22" text-anchor="middle" dominant-baseline="central" fill="var(--primary)" font-size="16" font-weight="700" font-family="Inter, sans-serif">${escapeHtml((firstName[0] || 'U').toUpperCase())}</text>
+        </svg>
+      </div>
       <div class="dash-bell">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
       </div>
@@ -102,10 +106,7 @@ export async function renderDashboard(container) {
     </div>
   `;
 
-  if (user?.photo_url) {
-    const avatar = document.getElementById('dashAvatar');
-    avatar.innerHTML = `<img src="${CONFIG.API_BASE_URL}${user.photo_url}" alt="${escapeHtml(firstName)}">`;
-  }
+
 
   loadMealCards();
   loadNutrition();
@@ -118,36 +119,63 @@ function loadMealCards() {
     const todayStr = new Date().toISOString().split('T')[0];
     const todayMeals = weekPlan[todayStr] || [];
 
-    const typeMeals = { desayuno: null, almuerzo: null, cena: null };
-    todayMeals.forEach(m => {
-      if (m.meal_type in typeMeals && !typeMeals[m.meal_type]) {
-        typeMeals[m.meal_type] = m;
-      }
-    });
+    if (todayMeals.length > 0) {
+      renderMealCards(el, todayMeals);
+    } else {
+      loadMealCardsFromAPI(el, todayStr);
+    }
+  } catch (e) {
+    console.error('[Dashboard] loadMealCards error:', e);
+    loadMealCardsFromAPI(el, new Date().toISOString().split('T')[0]);
+  }
+}
 
-    el.innerHTML = Object.entries(typeMeals).map(([type, meal]) => {
-      const cls = MEAL_CLASSES[type];
-      const label = MEAL_LABELS[type];
-      const name = meal ? escapeHtml(meal.recipe_name) : 'Sin planificar';
-      return `
-        <div class="dash-meal-card ${cls}">
-          <div class="dash-meal-icon">${MEAL_ICONS[type] || ''}</div>
-          <div class="dash-meal-info">
-            <div class="dash-meal-label">${label}</div>
-            <div class="dash-meal-kcal">${name}</div>
-          </div>
-        </div>`;
-    }).join('');
-  } catch {
-    el.innerHTML = ['desayuno', 'almuerzo', 'cena'].map(type => `
-      <div class="dash-meal-card ${MEAL_CLASSES[type]}">
+async function loadMealCardsFromAPI(el, todayStr) {
+  try {
+    const meals = await get(`/planner/day/${todayStr}`);
+    if (meals.length > 0) {
+      renderMealCards(el, meals);
+    } else {
+      renderEmptyMealCards(el);
+    }
+  } catch (e) {
+    console.error('[Dashboard] loadMealCardsFromAPI error:', e);
+    renderEmptyMealCards(el);
+  }
+}
+
+function renderMealCards(el, meals) {
+  const typeMeals = { desayuno: null, almuerzo: null, cena: null };
+  meals.forEach(m => {
+    if (m.meal_type in typeMeals && !typeMeals[m.meal_type]) {
+      typeMeals[m.meal_type] = m;
+    }
+  });
+
+  el.innerHTML = Object.entries(typeMeals).map(([type, meal]) => {
+    const cls = MEAL_CLASSES[type];
+    const label = MEAL_LABELS[type];
+    const name = meal ? escapeHtml(meal.recipe_name || meal.name || '') : 'Sin planificar';
+    return `
+      <div class="dash-meal-card ${cls}">
         <div class="dash-meal-icon">${MEAL_ICONS[type] || ''}</div>
         <div class="dash-meal-info">
-          <div class="dash-meal-label">${MEAL_LABELS[type]}</div>
-          <div class="dash-meal-kcal">Sin planificar</div>
+          <div class="dash-meal-label">${label}</div>
+          <div class="dash-meal-kcal">${name}</div>
         </div>
-      </div>`).join('');
-  }
+      </div>`;
+  }).join('');
+}
+
+function renderEmptyMealCards(el) {
+  el.innerHTML = ['desayuno', 'almuerzo', 'cena'].map(type => `
+    <div class="dash-meal-card ${MEAL_CLASSES[type]}">
+      <div class="dash-meal-icon">${MEAL_ICONS[type] || ''}</div>
+      <div class="dash-meal-info">
+        <div class="dash-meal-label">${MEAL_LABELS[type]}</div>
+        <div class="dash-meal-kcal">Sin planificar</div>
+      </div>
+    </div>`).join('');
 }
 
 async function loadNutrition() {

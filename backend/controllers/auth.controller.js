@@ -112,13 +112,3 @@ exports.resetOnboarding = async (req, res, next) => {
     res.json({ message: 'Onboarding reiniciado' });
   } catch (err) { next(err); }
 };
-
-exports.uploadPhoto = async (req, res, next) => {
-  try {
-    if (!req.file) return res.status(400).json({ error: 'No se envió ninguna imagen' });
-    const photoUrl = `/uploads/${req.file.filename}`;
-    await User.update(req.user.id, { photo_url: photoUrl });
-    const user = await User.findById(req.user.id);
-    res.json({ photo_url: photoUrl, user });
-  } catch (err) { next(err); }
-};

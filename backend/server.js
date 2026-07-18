@@ -21,14 +21,15 @@ const pdfRoutes = require('./routes/pdf.routes');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:8080').split(',');
+const allowedOrigins = process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(',') : [];
 
-app.use(helmet());
+app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin.trim())) {
+    if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin.trim())) {
       callback(null, true);
     } else {
+      console.error(`CORS blocked: origin="${origin}" | allowed=[${allowedOrigins}]`);
       callback(new Error('No permitido por CORS'));
     }
   },
@@ -44,21 +45,13 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 20,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { error: 'Demasiados intentos de autenticación, intenta de nuevo más tarde' },
-});
-
 app.use(express.json({ limit: '1mb' }));
 
 app.get('/', (_req, res) => {
   res.json({ message: 'TasteFlow API' });
 });
 
-app.use('/api/auth', authLimiter, authRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/recipes', recipesRoutes);
 app.use('/api/ingredients', ingredientsRoutes);
 app.use('/api/planner', plannerRoutes);

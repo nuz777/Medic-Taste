@@ -1,14 +1,12 @@
-import { getUser, logout, resetOnboarding, uploadProfilePhoto } from '../services/authService.js';
+import { getUser, logout, resetOnboarding } from '../services/authService.js';
 import { loadPreferences, hasCompletedQuestionnaire } from './questionnaire.js';
-import { CONFIG } from '../config.js';
 import { escapeHtml } from '../utils/escapeHtml.js';
 
 export function renderProfile(container) {
   const user = getUser();
   const prefs = loadPreferences();
   const done = hasCompletedQuestionnaire();
-
-  const photoUrl = user?.photo_url ? `${CONFIG.API_BASE_URL}${user.photo_url}` : null;
+  const initial = (user?.name || 'U')[0].toUpperCase();
 
   container.innerHTML = `
     <div class="profile-header">
@@ -21,16 +19,11 @@ export function renderProfile(container) {
     <div class="profile-card">
       <div class="profile-avatar-section">
         <div class="profile-avatar" id="profileAvatar">
-          ${photoUrl
-            ? `<img src="${photoUrl}" alt="Foto de perfil" />`
-            : `<span>${escapeHtml((user?.name || 'U')[0].toUpperCase())}</span>`
-          }
+          <svg viewBox="0 0 80 80" width="80" height="80">
+            <circle cx="40" cy="40" r="40" fill="var(--primary-light)"/>
+            <text x="40" y="40" text-anchor="middle" dominant-baseline="central" fill="var(--primary)" font-size="28" font-weight="700" font-family="Inter, sans-serif">${escapeHtml(initial)}</text>
+          </svg>
         </div>
-        <button class="btn btn-outline btn-sm" id="uploadPhotoBtn">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-          Cambiar foto
-        </button>
-        <input type="file" id="photoInput" accept="image/*" hidden />
       </div>
 
       <div class="profile-card-field">
@@ -85,30 +78,6 @@ export function renderProfile(container) {
   });
 
   document.getElementById('logoutBtn').addEventListener('click', logout);
-
-  document.getElementById('uploadPhotoBtn').addEventListener('click', () => {
-    document.getElementById('photoInput').click();
-  });
-
-  document.getElementById('photoInput').addEventListener('change', async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    try {
-      const data = await uploadProfilePhoto(file);
-      const avatar = document.getElementById('profileAvatar');
-      avatar.innerHTML = `<img src="${CONFIG.API_BASE_URL}${data.photo_url}?t=${Date.now()}" alt="Foto de perfil" />`;
-      const sidebarAvatar = document.getElementById('userAvatar');
-      if (sidebarAvatar) {
-        sidebarAvatar.innerHTML = '';
-        const img = document.createElement('img');
-        img.src = `${CONFIG.API_BASE_URL}${data.photo_url}?t=${Date.now()}`;
-        img.alt = 'Foto de perfil';
-        sidebarAvatar.appendChild(img);
-      }
-    } catch (err) {
-      alert(err.message || 'Error al subir la foto');
-    }
-  });
 }
 
 function getDietLabel(val) {

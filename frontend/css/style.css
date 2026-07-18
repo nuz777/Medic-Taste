@@ -98,6 +98,31 @@
   --shadow-glow: 0 0 0 3px rgba(77, 182, 172, 0.2), 0 2px 8px rgba(77, 182, 172, 0.15);
   --primary-50: rgba(77, 182, 172, 0.1);
   --border-subtle: #243530;
+
+  /* Macro colors — dark */
+  --macro-protein: #F09070;
+  --macro-protein-light: #3A2018;
+  --macro-carbs: #6BA3E8;
+  --macro-carbs-light: #162030;
+  --macro-fat: #5CC4A0;
+  --macro-fat-light: #132A22;
+
+  /* Calorie ring — dark */
+  --calorie-ring: #B0A4F0;
+  --calorie-ring-bg: #252040;
+
+  /* Meal card tints — dark */
+  --meal-breakfast-bg: #2A2210;
+  --meal-breakfast-accent: #FFB74D;
+  --meal-lunch-bg: #142A26;
+  --meal-lunch-accent: #4DB6AC;
+  --meal-dinner-bg: #162030;
+  --meal-dinner-accent: #6BA3E8;
+
+  /* Insight / neutral — dark */
+  --insight-bg: #1E1A30;
+  --insight-text: #A898D8;
+
   --diet-omnivore-text: #9CA3AF;
   --diet-pescatarian-text: #64B5F6;
 }
@@ -131,6 +156,31 @@
     --shadow-glow: 0 0 0 3px rgba(77, 182, 172, 0.2), 0 2px 8px rgba(77, 182, 172, 0.15);
     --primary-50: rgba(77, 182, 172, 0.1);
     --border-subtle: #243530;
+
+    /* Macro colors — dark */
+    --macro-protein: #F09070;
+    --macro-protein-light: #3A2018;
+    --macro-carbs: #6BA3E8;
+    --macro-carbs-light: #162030;
+    --macro-fat: #5CC4A0;
+    --macro-fat-light: #132A22;
+
+    /* Calorie ring — dark */
+    --calorie-ring: #B0A4F0;
+    --calorie-ring-bg: #252040;
+
+    /* Meal card tints — dark */
+    --meal-breakfast-bg: #2A2210;
+    --meal-breakfast-accent: #FFB74D;
+    --meal-lunch-bg: #142A26;
+    --meal-lunch-accent: #4DB6AC;
+    --meal-dinner-bg: #162030;
+    --meal-dinner-accent: #6BA3E8;
+
+    /* Insight / neutral — dark */
+    --insight-bg: #1E1A30;
+    --insight-text: #A898D8;
+
     --diet-omnivore-text: #9CA3AF;
     --diet-pescatarian-text: #64B5F6;
   }

@@ -70,19 +70,12 @@ darkToggle.addEventListener('click', () => {
 function updateSidebarUser(user) {
   userName.textContent = user.name || 'Usuario';
   userEmail.textContent = user.email || '';
-  if (user.photo_url) {
-    userAvatar.innerHTML = '';
-    const img = document.createElement('img');
-    img.src = `http://localhost:3000${user.photo_url}`;
-    img.alt = 'Foto de perfil';
-    img.style.width = '100%';
-    img.style.height = '100%';
-    img.style.borderRadius = '50%';
-    img.style.objectFit = 'cover';
-    userAvatar.appendChild(img);
-  } else {
-    userAvatar.textContent = (user.name || 'U')[0].toUpperCase();
-  }
+  const initial = (user.name || 'U')[0].toUpperCase();
+  userAvatar.innerHTML = `
+    <svg viewBox="0 0 36 36" width="36" height="36">
+      <circle cx="18" cy="18" r="18" fill="var(--primary-light)"/>
+      <text x="18" y="18" text-anchor="middle" dominant-baseline="central" fill="var(--primary)" font-size="14" font-weight="700" font-family="Inter, sans-serif">${initial}</text>
+    </svg>`;
 }
 
 let user = getUser();

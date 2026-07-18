@@ -243,7 +243,7 @@
   </div>
 
   <script type="module">
-    import { get } from './js/services/api.js';
+    import { get, post } from './js/services/api.js';
     import { CONFIG } from './js/config.js';
     import { isAuthenticated, completeOnboarding } from './js/services/authService.js';
     import { hasCompletedQuestionnaire } from './js/pages/questionnaire.js';
@@ -547,6 +547,16 @@
 
         localStorage.setItem('tf_week_plan', JSON.stringify(weekPlan));
         localStorage.setItem('tf_questionnaire_done', 'true');
+
+        const allMeals = Object.entries(weekPlan).flatMap(([dateStr, meals]) =>
+          meals.map((meal) => ({
+            recipe_id: meal.recipe_id,
+            plan_date: dateStr,
+            meal_type: meal.meal_type,
+          }))
+        );
+        await Promise.allSettled(allMeals.map((m) => post('/planner', m)));
+
         completeOnboarding().catch(() => {});
 
         content.innerHTML = `
