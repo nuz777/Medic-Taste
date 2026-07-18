@@ -145,6 +145,7 @@
   align-items: center;
   height: 100%;
   justify-content: flex-end;
+  position: relative;
 }
 
 .plans-bar-stack {
@@ -157,6 +158,7 @@
   transform-origin: bottom;
   animation: barGrowUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   opacity: 0;
+  position: relative;
 }
 
 @keyframes barGrowUp {
@@ -170,9 +172,29 @@
   }
 }
 
+.plans-bar-tooltip {
+  position: fixed;
+  background: var(--text);
+  color: #fff;
+  padding: 0.4rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 9999;
+}
+
+.plans-bar-tooltip.visible {
+  opacity: 1;
+}
+
 .plans-bar-segment {
   width: 100%;
   min-height: 2px;
+  cursor: pointer;
 }
 
 .plans-bar-segment.protein {

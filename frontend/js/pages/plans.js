@@ -81,6 +81,7 @@ async function loadGoalStats() {
 
 async function loadChart() {
   const el = document.getElementById('chartBars');
+  document.querySelectorAll('.plans-bar-tooltip').forEach(t => t.remove());
   const monday = getMonday(new Date());
   const start = monday.toISOString().split('T')[0];
   const end = new Date(monday.getTime() + 6 * 86400000).toISOString().split('T')[0];
@@ -123,13 +124,31 @@ async function loadChart() {
       return `
         <div class="plans-bar-col">
           <div class="plans-bar-stack" style="height:${barH}px; animation-delay:${idx * 0.08}s">
-            ${d.fat > 0 ? `<div class="plans-bar-segment fat" style="height:${fPct}%"></div>` : ''}
-            ${d.carbs > 0 ? `<div class="plans-bar-segment carbs" style="height:${cPct}%"></div>` : ''}
-            ${d.protein > 0 ? `<div class="plans-bar-segment protein" style="height:${pPct}%"></div>` : ''}
+            ${d.fat > 0 ? `<div class="plans-bar-segment fat" style="height:${fPct}%" data-tip="Grasa: ${Math.round(d.fat)}g"></div>` : ''}
+            ${d.carbs > 0 ? `<div class="plans-bar-segment carbs" style="height:${cPct}%" data-tip="Carbohidratos: ${Math.round(d.carbs)}g"></div>` : ''}
+            ${d.protein > 0 ? `<div class="plans-bar-segment protein" style="height:${pPct}%" data-tip="Proteína: ${Math.round(d.protein)}g"></div>` : ''}
           </div>
           <span class="plans-bar-label">${d.label}</span>
         </div>`;
     }).join('');
+
+    const tip = document.createElement('div');
+    tip.className = 'plans-bar-tooltip';
+    document.body.appendChild(tip);
+
+    el.querySelectorAll('.plans-bar-segment').forEach(seg => {
+      seg.addEventListener('mouseenter', () => {
+        tip.textContent = seg.dataset.tip;
+        tip.classList.add('visible');
+      });
+      seg.addEventListener('mousemove', e => {
+        tip.style.left = e.clientX + 12 + 'px';
+        tip.style.top = e.clientY - 10 + 'px';
+      });
+      seg.addEventListener('mouseleave', () => {
+        tip.classList.remove('visible');
+      });
+    });
   } catch {
     el.innerHTML = DAYS.map((d, idx) => `
       <div class="plans-bar-col">
