@@ -1,4 +1,4 @@
-import { get, put } from '../services/api.js';
+import { get, put, post } from '../services/api.js';
 import { getUser, completeOnboarding } from '../services/authService.js';
 
 const STORAGE_KEY = 'tf_preferences';
@@ -358,6 +358,15 @@ async function generatePlan(container) {
     localStorage.setItem('tf_week_plan', JSON.stringify(weekPlan));
     localStorage.setItem('tf_questionnaire_done', 'true');
     completeOnboarding().catch(() => {});
+
+    const allMeals = Object.entries(weekPlan).flatMap(([dateStr, meals]) =>
+      meals.map((meal) => ({
+        recipe_id: meal.recipe_id,
+        plan_date: dateStr,
+        meal_type: meal.meal_type,
+      }))
+    );
+    await Promise.allSettled(allMeals.map((m) => post('/planner', m)));
 
     container.innerHTML = `
       <div class="questionnaire-section">

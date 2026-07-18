@@ -21,6 +21,30 @@
   --error: #DC2626;
   --error-light: #FFEBEE;
 
+  /* Macro colors — harmonized with teal primary */
+  --macro-protein: #E07352;
+  --macro-protein-light: #FBE9E4;
+  --macro-carbs: #3B7DD8;
+  --macro-carbs-light: #E1EDFC;
+  --macro-fat: #2E9E7A;
+  --macro-fat-light: #D8F5EE;
+
+  /* Calorie ring */
+  --calorie-ring: #9B8FE8;
+  --calorie-ring-bg: #EDE9FC;
+
+  /* Meal card tints */
+  --meal-breakfast-bg: #FFF6E0;
+  --meal-breakfast-accent: #F0A830;
+  --meal-lunch-bg: #E0F2F1;
+  --meal-lunch-accent: #00897B;
+  --meal-dinner-bg: #DDE8F8;
+  --meal-dinner-accent: #4A7FBF;
+
+  /* Insight / neutral */
+  --insight-bg: #F3F0FA;
+  --insight-text: #7C6DBF;
+
   --radius: 12px;
   --radius-sm: 8px;
   --radius-lg: 16px;
@@ -246,6 +270,12 @@ h4 { font-size: 1.25rem; }
   padding: 1rem 2.5rem;
   font-size: 1.05rem;
   border-radius: var(--radius-lg);
+}
+
+.btn-sm {
+  padding: 0.45rem 1rem;
+  font-size: 0.82rem;
+  border-radius: var(--radius-sm);
 }
 
 .btn-block {
