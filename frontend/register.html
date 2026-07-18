@@ -16,81 +16,85 @@
 
       <div class="auth-form-panel sign-up">
         <form data-form="register" novalidate>
-          <a href="index.html" class="navbar-logo">
-            <svg width="44" height="44" viewBox="0 0 36 36" fill="none">
-              <rect width="36" height="36" rx="10" fill="#00897B"/>
-              <path d="M18 27.5C23 27.5 27 23.5 27 18C27 13 23 11 18 12C13 11 9 13 9 18C9 23.5 13 27.5 18 27.5Z" fill="#80CBC4"/>
-              <path d="M16 11.5L18 8.5L20 11.5Z" fill="#00897B"/>
-              <path d="M18 10V7" stroke="#4DB6AC" stroke-width="2" stroke-linecap="round"/>
-              <path d="M18 8.5C21 6.5 24 7.5 23.5 10C23 12 20 11 18 8.5Z" fill="#4DB6AC"/>
-            </svg>
-          </a>
-          <h1>Crea tu cuenta</h1>
-          <p class="auth-subtitle">Empieza a planificar tu alimentación saludable</p>
+          <div class="auth-form-card">
+            <a href="index.html" class="navbar-logo">
+              <svg width="44" height="44" viewBox="0 0 36 36" fill="none">
+                <rect width="36" height="36" rx="10" fill="#00897B"/>
+                <path d="M18 27.5C23 27.5 27 23.5 27 18C27 13 23 11 18 12C13 11 9 13 9 18C9 23.5 13 27.5 18 27.5Z" fill="#80CBC4"/>
+                <path d="M16 11.5L18 8.5L20 11.5Z" fill="#00897B"/>
+                <path d="M18 10V7" stroke="#4DB6AC" stroke-width="2" stroke-linecap="round"/>
+                <path d="M18 8.5C21 6.5 24 7.5 23.5 10C23 12 20 11 18 8.5Z" fill="#4DB6AC"/>
+              </svg>
+            </a>
+            <h1>Crea tu cuenta</h1>
+            <p class="auth-subtitle">Empieza a planificar tu alimentación saludable</p>
 
-          <div class="form-alert" data-alert role="alert"></div>
+            <div class="form-alert" data-alert role="alert"></div>
 
-          <div class="form-group">
-            <input class="form-input" type="text" data-field="name" placeholder="Tu nombre" required autocomplete="name">
-            <div class="form-error" data-error="name">Ingresa tu nombre</div>
-          </div>
-          <div class="form-group">
-            <input class="form-input" type="email" data-field="email" placeholder="tu@correo.com" required autocomplete="email">
-            <div class="form-error" data-error="email">Ingresa un correo válido</div>
-          </div>
-          <div class="form-group">
-            <div class="password-wrapper">
-              <input class="form-input" type="password" data-field="password" placeholder="Mínimo 6 caracteres" required autocomplete="new-password">
-              <button type="button" class="password-toggle" data-password-toggle aria-label="Mostrar contraseña">
-                <svg class="icon-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                <svg class="icon-eye-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-              </button>
+            <div class="form-group">
+              <input class="form-input" type="text" data-field="name" placeholder="Tu nombre" required autocomplete="name">
+              <div class="form-error" data-error="name">Ingresa tu nombre</div>
             </div>
-            <div class="form-error" data-error="password">La contraseña debe tener al menos 6 caracteres</div>
+            <div class="form-group">
+              <input class="form-input" type="email" data-field="email" placeholder="tu@correo.com" required autocomplete="email">
+              <div class="form-error" data-error="email">Ingresa un correo válido</div>
+            </div>
+            <div class="form-group">
+              <div class="password-wrapper">
+                <input class="form-input" type="password" data-field="password" placeholder="Mínimo 6 caracteres" required autocomplete="new-password">
+                <button type="button" class="password-toggle" data-password-toggle aria-label="Mostrar contraseña">
+                  <svg class="icon-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg class="icon-eye-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+              </div>
+              <div class="form-error" data-error="password">La contraseña debe tener al menos 6 caracteres</div>
+            </div>
+            <label class="form-checkbox">
+              <input type="checkbox" required>
+              Acepto los <a href="#" target="_blank">Términos y condiciones</a>
+            </label>
+            <button type="submit" class="btn btn-primary" data-submit>Crear cuenta</button>
           </div>
-          <label class="form-checkbox">
-            <input type="checkbox" required>
-            Acepto los <a href="#" target="_blank">Términos y condiciones</a>
-          </label>
-          <button type="submit" class="btn btn-primary" data-submit>Crear cuenta</button>
         </form>
       </div>
 
       <div class="auth-form-panel sign-in">
         <form data-form="login" novalidate>
-          <a href="index.html" class="navbar-logo">
-            <svg width="44" height="44" viewBox="0 0 36 36" fill="none">
-              <rect width="36" height="36" rx="10" fill="#00897B"/>
-              <path d="M18 27.5C23 27.5 27 23.5 27 18C27 13 23 11 18 12C13 11 9 13 9 18C9 23.5 13 27.5 18 27.5Z" fill="#80CBC4"/>
-              <path d="M16 11.5L18 8.5L20 11.5Z" fill="#00897B"/>
-              <path d="M18 10V7" stroke="#4DB6AC" stroke-width="2" stroke-linecap="round"/>
-              <path d="M18 8.5C21 6.5 24 7.5 23.5 10C23 12 20 11 18 8.5Z" fill="#4DB6AC"/>
-            </svg>
-          </a>
-          <h1>Bienvenido de vuelta</h1>
-          <p class="auth-subtitle">Ingresa a tu cuenta para continuar</p>
+          <div class="auth-form-card">
+            <a href="index.html" class="navbar-logo">
+              <svg width="44" height="44" viewBox="0 0 36 36" fill="none">
+                <rect width="36" height="36" rx="10" fill="#00897B"/>
+                <path d="M18 27.5C23 27.5 27 23.5 27 18C27 13 23 11 18 12C13 11 9 13 9 18C9 23.5 13 27.5 18 27.5Z" fill="#80CBC4"/>
+                <path d="M16 11.5L18 8.5L20 11.5Z" fill="#00897B"/>
+                <path d="M18 10V7" stroke="#4DB6AC" stroke-width="2" stroke-linecap="round"/>
+                <path d="M18 8.5C21 6.5 24 7.5 23.5 10C23 12 20 11 18 8.5Z" fill="#4DB6AC"/>
+              </svg>
+            </a>
+            <h1>Bienvenido de vuelta</h1>
+            <p class="auth-subtitle">Ingresa a tu cuenta para continuar</p>
 
-          <div class="form-alert" data-alert role="alert"></div>
+            <div class="form-alert" data-alert role="alert"></div>
 
-          <div class="form-group">
-            <input class="form-input" type="email" data-field="email" placeholder="tu@correo.com" required autocomplete="email">
-            <div class="form-error" data-error="email">Ingresa un correo válido</div>
-          </div>
-          <div class="form-group">
-            <div class="password-wrapper">
-              <input class="form-input" type="password" data-field="password" placeholder="••••••••" required autocomplete="current-password">
-              <button type="button" class="password-toggle" data-password-toggle aria-label="Mostrar contraseña">
-                <svg class="icon-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                <svg class="icon-eye-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-              </button>
+            <div class="form-group">
+              <input class="form-input" type="email" data-field="email" placeholder="tu@correo.com" required autocomplete="email">
+              <div class="form-error" data-error="email">Ingresa un correo válido</div>
             </div>
-            <div class="form-error" data-error="password">La contraseña debe tener al menos 6 caracteres</div>
+            <div class="form-group">
+              <div class="password-wrapper">
+                <input class="form-input" type="password" data-field="password" placeholder="••••••••" required autocomplete="current-password">
+                <button type="button" class="password-toggle" data-password-toggle aria-label="Mostrar contraseña">
+                  <svg class="icon-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg class="icon-eye-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+              </div>
+              <div class="form-error" data-error="password">La contraseña debe tener al menos 6 caracteres</div>
+            </div>
+            <label class="form-checkbox">
+              <input type="checkbox" checked>
+              Recordar sesión
+            </label>
+            <button type="submit" class="btn btn-primary" data-submit>Iniciar sesión</button>
           </div>
-          <label class="form-checkbox">
-            <input type="checkbox" checked>
-            Recordar sesión
-          </label>
-          <button type="submit" class="btn btn-primary" data-submit>Iniciar sesión</button>
         </form>
       </div>
 

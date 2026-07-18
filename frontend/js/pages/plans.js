@@ -89,7 +89,10 @@ async function loadChart() {
     const weekData = await get(`/nutrition/week?start=${start}&end=${end}`);
 
     const dataByDate = {};
-    weekData.forEach(d => { dataByDate[d.plan_date] = d; });
+    weekData.forEach(d => {
+      const key = typeof d.plan_date === 'string' ? d.plan_date.split('T')[0] : d.plan_date;
+      dataByDate[key] = d;
+    });
 
     const dayEntries = Array.from({ length: 7 }, (_, i) => {
       const d = new Date(monday);
@@ -98,23 +101,28 @@ async function loadChart() {
       return {
         label: DAYS[i],
         fullDay: DAYS_FULL[d.getDay()],
-        protein: dataByDate[ds]?.total_protein || 0,
-        carbs: dataByDate[ds]?.total_carbs || 0,
-        fat: dataByDate[ds]?.total_fat || 0,
+        protein: Number(dataByDate[ds]?.total_protein) || 0,
+        carbs: Number(dataByDate[ds]?.total_carbs) || 0,
+        fat: Number(dataByDate[ds]?.total_fat) || 0,
       };
     });
 
     const maxTotal = Math.max(10, ...dayEntries.map(d => d.protein + d.carbs + d.fat));
 
-    el.innerHTML = dayEntries.map(d => {
+    const containerH = el.clientHeight || 260;
+    const labelH = 20;
+    const maxBarH = containerH - labelH - 8;
+
+    el.innerHTML = dayEntries.map((d, idx) => {
       const total = d.protein + d.carbs + d.fat;
-      const pPct = total > 0 ? (d.protein / maxTotal) * 100 : 0;
-      const cPct = total > 0 ? (d.carbs / maxTotal) * 100 : 0;
-      const fPct = total > 0 ? (d.fat / maxTotal) * 100 : 0;
+      const barH = total > 0 ? Math.max(12, (total / maxTotal) * maxBarH) : 4;
+      const pPct = total > 0 ? (d.protein / total) * 100 : 0;
+      const cPct = total > 0 ? (d.carbs / total) * 100 : 0;
+      const fPct = total > 0 ? (d.fat / total) * 100 : 0;
 
       return `
         <div class="plans-bar-col">
-          <div class="plans-bar-stack" style="height:${total > 0 ? Math.max(8, pPct + cPct + fPct) : 4}%">
+          <div class="plans-bar-stack" style="height:${barH}px; animation-delay:${idx * 0.08}s">
             ${d.fat > 0 ? `<div class="plans-bar-segment fat" style="height:${fPct}%"></div>` : ''}
             ${d.carbs > 0 ? `<div class="plans-bar-segment carbs" style="height:${cPct}%"></div>` : ''}
             ${d.protein > 0 ? `<div class="plans-bar-segment protein" style="height:${pPct}%"></div>` : ''}
@@ -123,9 +131,9 @@ async function loadChart() {
         </div>`;
     }).join('');
   } catch {
-    el.innerHTML = DAYS.map(d => `
+    el.innerHTML = DAYS.map((d, idx) => `
       <div class="plans-bar-col">
-        <div class="plans-bar-stack" style="height:4%"></div>
+        <div class="plans-bar-stack" style="height:4px; animation-delay:${idx * 0.08}s"></div>
         <span class="plans-bar-label">${d}</span>
       </div>`).join('');
   }

@@ -1,3 +1,8 @@
+:root {
+  --auth-bg-image: url('../../assets/images/loginfondo.png');
+  --auth-bg-overlay: rgba(0, 0, 0, 0.3);
+}
+
 .auth-page {
   min-height: 100vh;
   min-height: 100dvh;
@@ -33,13 +38,53 @@
 
 .auth-form-panel form {
   background: var(--surface);
+  background-image: var(--auth-bg-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   padding: 0 2.75rem;
   height: 100%;
+  width: 100%;
   text-align: center;
+}
+
+.auth-form-panel form::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.auth-form-panel form > * {
+  position: relative;
+  z-index: 1;
+}
+
+.auth-form-card {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: var(--radius-lg);
+  padding: 2.2rem 2rem;
+  max-width: 380px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.dark .auth-form-card {
+  background: rgba(26, 40, 35, 0.92);
 }
 
 .auth-form-panel .navbar-logo {
@@ -144,6 +189,11 @@
   margin: 0.3rem 0 0.6rem;
 }
 
+.auth-form-panel .form-checkbox a {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
 .auth-form-panel .btn {
   padding: 0.7rem 2.5rem;
   margin-top: 0.4rem;
@@ -185,13 +235,13 @@
   height: 100%;
   overflow: hidden;
   transition: all 0.6s ease-in-out;
-  border-radius: 150px 0 0 100px;
+  border-radius: 0;
   z-index: 1000;
 }
 
 .auth-container.active .auth-toggle-container {
   transform: translateX(-100%);
-  border-radius: 0 150px 100px 0;
+  border-radius: 0;
 }
 
 .auth-toggle {
