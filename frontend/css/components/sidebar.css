@@ -317,6 +317,9 @@ body.sidebar-collapsed .app-main {
   .sidebar-close {
     display: flex;
   }
+  .sidebar-toggle {
+    display: none;
+  }
   .app-main {
     margin-left: 0;
     padding: 16px;

@@ -176,12 +176,37 @@
 
   .navbar-links a {
     font-size: 1.1rem;
+    color: var(--text);
   }
-
+  .navbar-links a:hover {
+    color: var(--primary);
+  }
   .navbar-links .btn {
     width: 100%;
     margin-left: 0;
     margin-top: 1rem;
+  }
+  .navbar:not(.scrolled) .navbar-links .btn-outline,
+  .navbar.scrolled .navbar-links .btn-outline,
+  .navbar-links .btn-outline {
+    color: var(--primary) !important;
+    border-color: var(--primary) !important;
+    background: transparent !important;
+  }
+  .navbar:not(.scrolled) .navbar-links .btn-outline:hover,
+  .navbar.scrolled .navbar-links .btn-outline:hover,
+  .navbar-links .btn-outline:hover {
+    background: var(--primary) !important;
+    color: #fff !important;
+  }
+  .navbar-links .btn-primary {
+    background: var(--primary) !important;
+    color: #fff !important;
+    border-color: var(--primary) !important;
+  }
+  .navbar-links .btn-primary:hover {
+    background: #00695c !important;
+    color: #fff !important;
   }
 
   .navbar-overlay {

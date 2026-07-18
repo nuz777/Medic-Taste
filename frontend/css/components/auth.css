@@ -204,6 +204,22 @@
   text-align: left;
 }
 
+.auth-switch-text {
+  display: none;
+  margin-top: 0.8rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+.auth-switch-text a {
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+.auth-switch-text a:hover {
+  text-decoration: underline;
+}
+
 .sign-in { z-index: 2; }
 
 .auth-container.active .sign-in {
@@ -356,6 +372,7 @@
   .auth-container.active .sign-up { display: flex; }
   .auth-container.active .sign-in { display: none; }
   .auth-mobile-switch { display: block; }
+  .auth-switch-text { display: block; }
   .auth-container:not(.active) ~ .auth-mobile-switch[data-mobile="register-hint"] { display: none; }
   .auth-container.active ~ .auth-mobile-switch[data-mobile="login-hint"] { display: none; }
 }
