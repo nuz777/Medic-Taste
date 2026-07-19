@@ -10,7 +10,7 @@ const PdfService = {
       doc.on('end', () => resolve(Buffer.concat(buffers)));
       doc.on('error', reject);
 
-      doc.fontSize(22).text('TasteFlow - Menú Semanal', { align: 'center' });
+      doc.fontSize(22).text('Medic-Taste - Menú Semanal', { align: 'center' });
       doc.moveDown();
 
       const groupedByDay = {};

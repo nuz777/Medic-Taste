@@ -48,7 +48,7 @@ app.use(limiter);
 app.use(express.json({ limit: '1mb' }));
 
 app.get('/', (_req, res) => {
-  res.json({ message: 'TasteFlow API' });
+  res.json({ message: 'Medic-Taste API' });
 });
 
 app.use('/api/auth', authRoutes);
@@ -78,6 +78,6 @@ process.on('uncaughtException', (err) => {
 });
 
 app.listen(PORT, async () => {
-  console.log(`TasteFlow API corriendo en http://localhost:${PORT}`);
+  console.log(`Medic-Taste API corriendo en http://localhost:${PORT}`);
   await testConnection();
 });

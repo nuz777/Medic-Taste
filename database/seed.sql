@@ -1,8 +1,8 @@
-USE tasteflow;
+USE medic_taste;
 
 -- Usuario de prueba (omitir si ya existe)
 -- INSERT INTO users (name, email, password) VALUES
--- ('Usuario Demo', 'demo@tasteflow.com', '$2a$10$dummyhashparaeldemo');
+-- ('Usuario Demo', 'demo@medic-taste.com', '$2a$10$dummyhashparaeldemo');
 
 -- =====================================================
 -- Ingredientes locales de Barranquilla (precios COP)

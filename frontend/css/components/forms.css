@@ -229,3 +229,18 @@
 .password-toggle:hover {
   color: var(--text-secondary);
 }
+
+@media (max-width: 480px) {
+  .auth-page { padding: 1rem 0.75rem; }
+  .auth-card { padding: 1.5rem 1.25rem; border-radius: var(--radius-lg); }
+  .auth-card h1 { font-size: 1.3rem; }
+  .auth-subtitle { font-size: 0.82rem; margin-bottom: 1.5rem; }
+  .form-group { margin-bottom: 1rem; }
+  .form-input { padding: 0.7rem 0.85rem; font-size: 0.9rem; }
+  .form-footer { margin-top: 1.2rem; padding-top: 1.2rem; font-size: 0.82rem; }
+  .form-label { font-size: 0.8rem; }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .auth-card { max-width: 380px; padding: 2rem; }
+}

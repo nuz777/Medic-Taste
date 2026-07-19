@@ -102,6 +102,12 @@
   .footer-grid {
     grid-template-columns: 1fr;
   }
+  .footer {
+    padding: 2.5rem 0 1.5rem;
+  }
+  .footer-bottom {
+    padding: 0 0.5rem;
+  }
 }
 
 .dark .footer { background: #0A0F0D; }

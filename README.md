@@ -1,4 +1,4 @@
-# TasteFlow — Planificador de Menús Semanales
+# Medic-Taste — Planificador de Menús Semanales
 
 Planificador nutricional que genera menús semanales con recetas balanceadas.
 
@@ -6,27 +6,50 @@ Planificador nutricional que genera menús semanales con recetas balanceadas.
 
 - **Node.js** (v18+)
 - **MySQL** (v8+)
-- **Python 3** (para servir el frontend)....
+- **Python 3** (para servir el frontend e inicializar la base de datos)
 
-## Setup
+## Setup rápido
 
 ```bash
 # 1. Clonar el repo
 git clone <repo-url>
-cd tasteflow
+cd Medic-Taste
 
-# 2. Crear la base de datos
-mysql -u root -p < database/schema.sql
+# 2. Inicializar la base de datos (schema + seed automático)
+python scripts/init_db.py
 
-# 3. (Opcional) Cargar datos de ejemplo
-mysql -u root -p tasteflow < database/seed.sql
-
-# 4. Configurar credenciales en backend/.env
-cp backend/.env.example backend/.env   # si existe, si no editarlo directo
+# 3. Configurar credenciales en backend/.env (si es necesario)
 # Editar DB_USER, DB_PASSWORD, DB_NAME según tu MySQL
 
-# 5. Instalar dependencias del backend
+# 4. Instalar dependencias del backend
 cd backend && npm install
+```
+
+## Inicializar base de datos en un computador nuevo
+
+Ejecuta el script de Python para crear la base de datos, las tablas y cargar todos los datos de recetas e ingredientes:
+
+```bash
+python scripts/init_db.py
+```
+
+Este script:
+- Crea la base de datos `medic_taste` si no existe
+- Ejecuta el `schema.sql` (creación de tablas)
+- Carga el `seed.sql` (ingredientes y recetas base)
+- Carga el `seed_mas_recetas.sql` (recetas adicionales)
+- Carga los scripts de corrección de ingredientes faltantes
+
+Opciones:
+```bash
+# Especificar usuario y contraseña de MySQL
+python scripts/init_db.py --user root --password 1234
+
+# Solo crear schema sin datos
+python scripts/init_db.py --schema-only
+
+# Forzar recreación (borrar y crear de cero)
+python scripts/init_db.py --force
 ```
 
 ## Iniciar
@@ -44,7 +67,7 @@ Abrir [http://localhost:8080](http://localhost:8080)
 ## Ver usuarios registrados
 
 ```bash
-mysql -u root -p tasteflow -e "SELECT id, name, email, created_at FROM users;"
+mysql -u root -p medic_taste -e "SELECT id, name, email, created_at FROM users;"
 ```
 
 ## Detener todo
@@ -60,8 +83,9 @@ sudo systemctl stop mysql
 ## Estructura
 
 ```
-tasteflow/
+Medic-Taste/
 ├── frontend/     → HTML, CSS, JS vanilla
 ├── backend/      → API REST con Node/Express
-└── database/     → Scripts SQL (schema + seed)
+├── database/     → Scripts SQL (schema + seed)
+└── scripts/      → Scripts de automatización (Python)
 ```

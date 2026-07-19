@@ -1,6 +1,7 @@
 import { get } from '../services/api.js';
 import { logUsage } from '../services/usage.js';
 import { escapeHtml } from '../utils/escapeHtml.js';
+import { nameToSlug } from '../utils/nameToSlug.js';
 
 const CART_KEY = 'tf_shopping_cart';
 const DIET_KEY = 'tf_shop_show_all';
@@ -10,6 +11,82 @@ const MEAT_CATS = [
   'Embutidos', 'Pescados', 'Pescados y Mariscos', 'Mariscos',
 ];
 const DAIRY_CATS = ['Lacteos', 'Lácteos y Huevos'];
+
+const INGREDIENT_IMAGES = {
+  'tomate': 'assets/images/ingredients/tomate.jpg',
+  'cebolla': 'assets/images/ingredients/cebolla.jpg',
+  'pimenton': 'assets/images/ingredients/pimiento-rojo.jpg',
+  'pimiento': 'assets/images/ingredients/pimiento-rojo.jpg',
+  'pimiento rojo': 'assets/images/ingredients/pimiento-rojo.jpg',
+  'ajo': 'assets/images/ingredients/ajo.jpg',
+  'leche': 'assets/images/ingredients/leche.jpg',
+  'pechuga de pollo': 'assets/images/ingredients/pechuga-de-pollo.jpg',
+  'arroz': 'assets/images/ingredients/arroz-blanco.jpg',
+  'arroz blanco': 'assets/images/ingredients/arroz-blanco.jpg',
+  'aceite': 'assets/images/ingredients/aceite-de-oliva.jpg',
+  'aceite de oliva': 'assets/images/ingredients/aceite-de-oliva.jpg',
+  'sal': 'assets/images/ingredients/sal.jpg',
+  'harina': 'assets/images/ingredients/harina-de-trigo.jpg',
+  'harina de trigo': 'assets/images/ingredients/harina-de-trigo.jpg',
+  'huevo': 'assets/images/ingredients/huevo.jpg',
+  'lechuga': 'assets/images/ingredients/lechuga.jpg',
+  'pasta': 'assets/images/ingredients/pasta.jpg',
+  'pasta pastusa': 'assets/images/ingredients/pasta.jpg',
+  'queso parmesano': 'assets/images/ingredients/queso-parmesano.jpg',
+  'queso costeno': 'assets/images/ingredients/queso_costeño.png',
+  'aguacate': 'assets/images/ingredients/aguacate.jpg',
+  'pan integral': 'assets/images/ingredients/pan-integral.jpg',
+  'atun': 'assets/images/ingredients/atun-en-lata.jpg',
+  'lentejas': 'assets/images/ingredients/lentejas.jpg',
+  'zanahoria': 'assets/images/ingredients/zanahoria.jpg',
+  'manzana': 'assets/images/ingredients/manzana.jpg',
+  'yogur': 'assets/images/ingredients/yogur-natural.jpg',
+  'almendras': 'assets/images/ingredients/almendras.jpg',
+  'miel': 'assets/images/ingredients/miel.jpg',
+  'calabacin': 'assets/images/ingredients/calabacin.jpg',
+  'platano': 'assets/images/ingredients/platano.jpg',
+  'papa': 'assets/images/ingredients/PAPA-PASTUSA.png',
+  'cafe': 'assets/images/ingredients/Cafe_sello_rojo.jpg',
+  'cafe sello rojo': 'assets/images/ingredients/Cafe_sello_rojo.jpg',
+  'azucar': 'assets/images/ingredients/AZUCAR-INCAUCAjpg.jpg',
+  'azucar incauca': 'assets/images/ingredients/AZUCAR-INCAUCAjpg.jpg',
+  'frijol': 'assets/images/ingredients/zaragoza.jpg',
+  'frijol zaragoza': 'assets/images/ingredients/zaragoza.jpg',
+  'zaragoza': 'assets/images/ingredients/zaragoza.jpg',
+  'cilantro': 'assets/images/ingredients/cilantro.jpg',
+  'aji': 'assets/images/ingredients/default-ingredient.svg',
+  'mango': 'assets/images/ingredients/mango.jpg',
+  'cerdo': 'assets/images/ingredients/default-ingredient.svg',
+  'carne de cerdo': 'assets/images/ingredients/default-ingredient.svg',
+  'panela': 'assets/images/ingredients/default-ingredient.svg',
+  'mantequilla': 'assets/images/ingredients/mantequilla.jpg',
+  'carne de res': 'assets/images/ingredients/default-ingredient.svg',
+  'carne molida': 'assets/images/ingredients/default-ingredient.svg',
+  'yuca': 'assets/images/ingredients/default-ingredient.svg',
+  'semillas de chia': 'assets/images/ingredients/semillasCHIA.jpg',
+  'chia': 'assets/images/ingredients/semillasCHIA.jpg',
+  'butifarra': 'assets/images/ingredients/butifarra-soleden.jpg',
+  'quinoa': 'assets/images/ingredients/default-ingredient.svg',
+  'espinaca': 'assets/images/ingredients/default-ingredient.svg',
+  'champinones': 'assets/images/ingredients/default-ingredient.svg',
+  'brocoli': 'assets/images/ingredients/default-ingredient.svg',
+  'tofu': 'assets/images/ingredients/default-ingredient.svg',
+  'garbanzos': 'assets/images/ingredients/default-ingredient.svg',
+  'salmon': 'assets/images/ingredients/default-ingredient.svg',
+  'merluza': 'assets/images/ingredients/default-ingredient.svg',
+  'camarones': 'assets/images/ingredients/default-ingredient.svg',
+  'avena': 'assets/images/ingredients/default-ingredient.svg',
+  'nueces': 'assets/images/ingredients/default-ingredient.svg',
+};
+
+function getIngredientImage(name) {
+  const lower = name.toLowerCase();
+  for (const [key, img] of Object.entries(INGREDIENT_IMAGES)) {
+    if (lower.includes(key)) return img;
+  }
+  const slug = nameToSlug(name);
+  return `assets/images/ingredients/${slug}.jpg`;
+}
 
 const CATEGORY_ICONS = {
   'Verduras': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z"/><path d="M12 6v6l4 2"/></svg>',
@@ -100,7 +177,9 @@ export function renderShopping(container) {
         </div>
       </div>
 
+      <div class="shop-cart-overlay" id="shopCartOverlay"></div>
       <div class="shop-cart" id="shopCart">
+        <div class="shop-cart-drag-handle"></div>
         <div class="shop-cart-header">
           <div class="shop-cart-title">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
@@ -126,6 +205,11 @@ export function renderShopping(container) {
         </div>
       </div>
     </div>
+
+    <button class="shop-float-cart" id="shopFloatCart">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      Ir al carrito <span class="shop-float-badge" id="floatBadge">0</span>
+    </button>
   `;
 
   /* --- event listeners --- */
@@ -136,6 +220,60 @@ export function renderShopping(container) {
   }, 300));
 
   document.getElementById('cartGenerate').addEventListener('click', showModal);
+
+  function openCart() {
+    const cartEl = document.getElementById('shopCart');
+    const overlay = document.getElementById('shopCartOverlay');
+    if (cartEl) cartEl.classList.add('expanded');
+    if (overlay) overlay.classList.add('open');
+  }
+
+  function closeCart() {
+    const cartEl = document.getElementById('shopCart');
+    const overlay = document.getElementById('shopCartOverlay');
+    if (cartEl) cartEl.classList.remove('expanded');
+    if (overlay) overlay.classList.remove('open');
+  }
+
+  function toggleCart() {
+    const cartEl = document.getElementById('shopCart');
+    if (cartEl && cartEl.classList.contains('expanded')) {
+      closeCart();
+    } else {
+      openCart();
+    }
+  }
+
+  const floatBtn = document.getElementById('shopFloatCart');
+  if (floatBtn) {
+    floatBtn.addEventListener('click', () => {
+      if (window.innerWidth <= 768) {
+        openCart();
+      } else {
+        const cartEl = document.getElementById('shopCart');
+        if (cartEl) cartEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  }
+
+  const overlay = document.getElementById('shopCartOverlay');
+  if (overlay) {
+    overlay.addEventListener('click', closeCart);
+  }
+
+  const cartDragHandle = document.querySelector('.shop-cart-drag-handle');
+  if (cartDragHandle) {
+    cartDragHandle.addEventListener('click', closeCart);
+  }
+
+  const cartHeader = document.querySelector('.shop-cart-header');
+  if (cartHeader) {
+    cartHeader.addEventListener('click', () => {
+      if (window.innerWidth <= 768) {
+        toggleCart();
+      }
+    });
+  }
 
   const cb = document.getElementById('shopShowAll');
   if (cb) cb.addEventListener('change', () => {
@@ -203,13 +341,13 @@ export function renderShopping(container) {
         const unit = extractUnit(ing.name);
         const name = cleanName(ing.name);
         const inCart = cart.some(c => c.id === ing.id);
-        const catIcon = CATEGORY_ICONS[ing.category] || CATEGORY_ICONS.default;
+        const img = getIngredientImage(name);
 
         html += `
           <div class="shop-card">
             <div class="shop-card-img">
-              <div class="shop-card-img-placeholder">
-                ${catIcon}
+              <img src="${img}" alt="${escapeHtml(name)}" loading="lazy" onerror="var s=this;s.style.display='none';s.nextElementSibling.style.display='flex'">
+              <div class="shop-card-img-placeholder" style="display:none">
                 <span>${(ing.category || '').substring(0, 12)}</span>
               </div>
             </div>
@@ -314,8 +452,20 @@ export function renderShopping(container) {
     const footerEl = document.getElementById('cartFooter');
     const badge = document.getElementById('cartBadge');
     const totalEl = document.getElementById('cartTotal');
+    const floatBadge = document.getElementById('floatBadge');
+    const totalCount = cart.reduce((s, i) => s + i.qty, 0);
 
-    badge.textContent = cart.reduce((s, i) => s + i.qty, 0);
+    badge.textContent = totalCount;
+    if (floatBadge) floatBadge.textContent = totalCount;
+
+    const floatBtn = document.getElementById('shopFloatCart');
+    if (floatBtn) {
+      if (window.innerWidth <= 768) {
+        floatBtn.classList.add('visible');
+      } else {
+        floatBtn.classList.toggle('visible', totalCount > 0);
+      }
+    }
 
     if (!cart.length) {
       itemsEl.innerHTML = `

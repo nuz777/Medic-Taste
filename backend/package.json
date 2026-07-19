@@ -1,7 +1,7 @@
 {
-  "name": "tasteflow-backend",
+  "name": "medic-taste-backend",
   "version": "1.0.0",
-  "description": "TasteFlow API REST - Planificador de Menus Semanales",
+  "description": "Medic-Taste API REST - Planificador de Menus Semanales",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

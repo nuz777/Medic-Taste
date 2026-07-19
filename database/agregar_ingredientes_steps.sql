@@ -1,4 +1,4 @@
-USE tasteflow;
+USE medic_taste;
 
 -- Receta 11: Avena con frutas
 INSERT IGNORE INTO recipe_ingredients (recipe_id, ingredient_id, amount, unit) VALUES

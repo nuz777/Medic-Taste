@@ -1,4 +1,4 @@
-USE tasteflow;
+USE medic_taste;
 
 -- Missing ingredients referenced by seed_mas_recetas.sql
 -- ID 47 = Mango (used in recipes 39, 66, 69)

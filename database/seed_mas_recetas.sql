@@ -1,4 +1,4 @@
-USE tasteflow;
+USE medic_taste;
 
 -- =============================================
 -- NUEVAS RECETAS (35 adicionales, IDs 35-69)

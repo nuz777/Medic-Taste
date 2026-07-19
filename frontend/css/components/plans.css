@@ -334,6 +334,40 @@
   .plans-stat-card {
     padding: 1rem;
   }
+
+  .plans-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .plans-chart-header {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .plans-chart-select {
+    font-size: 0.82rem;
+    padding: 0.3rem 0.5rem;
+  }
+
+  .plans-empty {
+    padding: 2rem 0.75rem;
+  }
+
+  .plans-stat-card h4 {
+    font-size: 0.9rem;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .plans-bars {
+    height: 240px;
+  }
+
+  .plans-bar-stack {
+    max-width: 40px;
+  }
 }
 
 @media (min-width: 768px) {

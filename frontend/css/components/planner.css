@@ -465,4 +465,44 @@
     width: 38px;
     height: 38px;
   }
+
+  .planner-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .planner-header h1 {
+    font-size: 1.2rem;
+  }
+
+  .planner-card {
+    padding: 0.6rem 0.7rem;
+  }
+
+  .planner-card-name {
+    font-size: 0.82rem;
+  }
+
+  .planner-empty {
+    padding: 2rem 1rem;
+  }
+
+  .planner-modal {
+    padding: 1.25rem;
+  }
+
+  .planner-modal-actions {
+    flex-direction: column;
+  }
+
+  .planner-modal-actions .btn {
+    width: 100%;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .planner-pill {
+    min-width: 52px;
+    padding: 0.6rem 0.5rem;
+  }
 }

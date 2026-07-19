@@ -2,9 +2,9 @@
 
 Scripts SQL para MySQL Workbench.
 
-- `schema.sql` → creación de la base de datos `tasteflow` y todas sus tablas con relaciones (recetas, ingredientes, planificador, favoritos, colecciones, estadísticas).
+- `schema.sql` → creación de la base de datos `medic_taste` y todas sus tablas con relaciones (recetas, ingredientes, planificador, favoritos, colecciones, estadísticas).
 - `seed.sql` → datos de prueba para poblar la base de datos durante el desarrollo (recetas de ejemplo, ingredientes comunes).
-- `tasteflow.mwb` → (opcional) archivo de modelo visual de MySQL Workbench, si prefieres diseñar el diagrama ER gráficamente antes de exportar el SQL.
+- `medic-taste.mwb` → (opcional) archivo de modelo visual de MySQL Workbench, si prefieres diseñar el diagrama ER gráficamente antes de exportar el SQL.
 
 ## Uso
 1. Abrir MySQL Workbench.

@@ -360,6 +360,26 @@ body.sidebar-collapsed .app-main {
   }
 }
 
+@media (min-width: 769px) and (max-width: 1024px) {
+  .sidebar {
+    width: 220px;
+  }
+  .app-main {
+    margin-left: 220px;
+    padding: 20px 24px;
+  }
+  .sidebar-link {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+  .sidebar-user-name {
+    font-size: 12px;
+  }
+  .sidebar-user-email {
+    font-size: 10px;
+  }
+}
+
 /* Dark mode overrides */
 .dark .sidebar {
   background: rgba(15,23,20,0.92);

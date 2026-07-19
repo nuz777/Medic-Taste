@@ -385,6 +385,26 @@ h4 { font-size: 1.25rem; }
   }
 }
 
+@media (max-width: 480px) {
+  .section {
+    padding: 2rem 0;
+  }
+  .container {
+    padding: 0 0.75rem;
+  }
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.35rem; }
+  h3 { font-size: 1.15rem; }
+  .btn {
+    padding: 0.6rem 1.25rem;
+    font-size: 0.88rem;
+  }
+  .btn-lg {
+    padding: 0.8rem 1.75rem;
+    font-size: 0.95rem;
+  }
+}
+
 /* Dark mode overrides for hardcoded colors */
 .dark .planner-meal.cena { background: #1A2A3A; }
 .dark .planner-meal.snack { background: #2A1A35; }

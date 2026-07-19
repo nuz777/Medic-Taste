@@ -1,8 +1,8 @@
-CREATE DATABASE IF NOT EXISTS tasteflow
+CREATE DATABASE IF NOT EXISTS medic_taste
   DEFAULT CHARACTER SET utf8mb4
   DEFAULT COLLATE utf8mb4_unicode_ci;
 
-USE tasteflow;
+USE medic_taste;
 
 -- -----------------------------------------------------------
 -- Usuarios
@@ -46,7 +46,26 @@ CREATE TABLE IF NOT EXISTS ingredients (
   grams_per_unit    DECIMAL(8,2) DEFAULT NULL COMMENT 'peso en gramos de 1 unidad (para unidad/ml)'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE INDEX idx_ingredients_category ON ingredients(category);
+-- Helper: create index only if it doesn't exist
+DROP PROCEDURE IF EXISTS safe_create_index;
+DELIMITER //
+CREATE PROCEDURE safe_create_index(
+  IN p_table VARCHAR(64), IN p_index VARCHAR(64), IN p_cols VARCHAR(255)
+)
+BEGIN
+  DECLARE cnt INT DEFAULT 0;
+  SELECT COUNT(*) INTO cnt FROM information_schema.statistics
+  WHERE table_schema = DATABASE() AND table_name = p_table AND index_name = p_index;
+  IF cnt = 0 THEN
+    SET @sql = CONCAT('CREATE INDEX ', p_index, ' ON ', p_table, '(', p_cols, ')');
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+  END IF;
+END //
+DELIMITER ;
+
+CALL safe_create_index('ingredients', 'idx_ingredients_category', 'category');
 
 -- -----------------------------------------------------------
 -- Ingredientes de cada receta (join table)
@@ -73,7 +92,26 @@ CREATE TABLE IF NOT EXISTS recipe_steps (
   FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE INDEX idx_steps_recipe ON recipe_steps(recipe_id);
+-- Helper: create index only if it doesn't exist
+DROP PROCEDURE IF EXISTS safe_create_index;
+DELIMITER //
+CREATE PROCEDURE safe_create_index(
+  IN p_table VARCHAR(64), IN p_index VARCHAR(64), IN p_cols VARCHAR(255)
+)
+BEGIN
+  DECLARE cnt INT DEFAULT 0;
+  SELECT COUNT(*) INTO cnt FROM information_schema.statistics
+  WHERE table_schema = DATABASE() AND table_name = p_table AND index_name = p_index;
+  IF cnt = 0 THEN
+    SET @sql = CONCAT('CREATE INDEX ', p_index, ' ON ', p_table, '(', p_cols, ')');
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+  END IF;
+END //
+DELIMITER ;
+
+CALL safe_create_index('recipe_steps', 'idx_steps_recipe', 'recipe_id');
 
 -- -----------------------------------------------------------
 -- Planificador semanal
@@ -88,7 +126,7 @@ CREATE TABLE IF NOT EXISTS meal_plan (
   FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE INDEX idx_meal_plan_date ON meal_plan(plan_date);
+CALL safe_create_index('meal_plan', 'idx_meal_plan_date', 'plan_date');
 
 -- -----------------------------------------------------------
 -- Favoritos
@@ -137,5 +175,9 @@ CREATE TABLE IF NOT EXISTS usage_stats (
   FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE INDEX idx_stats_action ON usage_stats(action_type);
-CREATE INDEX idx_stats_date   ON usage_stats(created_at);
+CALL safe_create_index('usage_stats', 'idx_stats_action', 'action_type');
+CALL safe_create_index('usage_stats', 'idx_stats_date', 'created_at');
+
+-- Cleanup helper procedure
+DROP PROCEDURE IF EXISTS safe_create_index;
+DROP PROCEDURE IF EXISTS idx_create;

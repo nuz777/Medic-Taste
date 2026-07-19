@@ -377,6 +377,14 @@
   .auth-container.active ~ .auth-mobile-switch[data-mobile="login-hint"] { display: none; }
 }
 
+@media (max-width: 480px) {
+  .auth-container { border-radius: var(--radius); }
+  .auth-form-panel form { padding: 1.5rem 1rem; }
+  .auth-form-panel h1 { font-size: 1.3rem; }
+  .auth-form-panel .form-group { max-width: 100%; }
+  .auth-form-card { padding: 1.25rem; }
+}
+
 .auth-mobile-switch { display: none; text-align: center; padding-top: 1.25rem; font-size: 0.85rem; color: var(--text-secondary); }
 .auth-mobile-switch a { font-weight: 600; cursor: pointer; }
 

@@ -135,8 +135,41 @@ export function renderQuestionnaire(container) {
           if (input.checked) opt.classList.add('selected');
           answers[q.name] = input.value;
         } else {
-          opt.classList.toggle('selected', input.checked);
-          answers[q.name] = [...document.querySelectorAll(`input[name="${q.name}"]:checked`)].map(el => el.value);
+          if (q.name === 'allergies') {
+            if (input.value === 'none' && input.checked) {
+              options.forEach(o => {
+                const inp = o.querySelector('input');
+                if (inp.value !== 'none') {
+                  inp.checked = false;
+                  inp.disabled = true;
+                  o.classList.add('disabled');
+                  o.classList.remove('selected');
+                }
+              });
+              answers[q.name] = ['none'];
+            } else if (input.value !== 'none' && input.checked) {
+              const noneOpt = Array.from(options).find(o => o.querySelector('input').value === 'none');
+              if (noneOpt) {
+                const noneInp = noneOpt.querySelector('input');
+                noneInp.checked = false;
+                noneOpt.classList.remove('selected');
+              }
+              options.forEach(o => {
+                const inp = o.querySelector('input');
+                inp.disabled = false;
+                o.classList.remove('disabled');
+              });
+              answers[q.name] = [...document.querySelectorAll(`input[name="${q.name}"]:checked`)].map(el => el.value);
+            } else {
+              answers[q.name] = [...document.querySelectorAll(`input[name="${q.name}"]:checked`)].map(el => el.value);
+              if (!answers[q.name].length) {
+                options.forEach(o => o.querySelector('input').disabled = false);
+              }
+            }
+          } else {
+            opt.classList.toggle('selected', input.checked);
+            answers[q.name] = [...document.querySelectorAll(`input[name="${q.name}"]:checked`)].map(el => el.value);
+          }
         }
         savePreferences();
       });
@@ -146,8 +179,41 @@ export function renderQuestionnaire(container) {
           if (input.checked) opt.classList.add('selected');
           answers[q.name] = input.value;
         } else {
-          opt.classList.toggle('selected', input.checked);
-          answers[q.name] = [...document.querySelectorAll(`input[name="${q.name}"]:checked`)].map(el => el.value);
+          if (q.name === 'allergies') {
+            if (input.value === 'none' && input.checked) {
+              options.forEach(o => {
+                const inp = o.querySelector('input');
+                if (inp.value !== 'none') {
+                  inp.checked = false;
+                  inp.disabled = true;
+                  o.classList.add('disabled');
+                  o.classList.remove('selected');
+                }
+              });
+              answers[q.name] = ['none'];
+            } else if (input.value !== 'none' && input.checked) {
+              const noneOpt = Array.from(options).find(o => o.querySelector('input').value === 'none');
+              if (noneOpt) {
+                const noneInp = noneOpt.querySelector('input');
+                noneInp.checked = false;
+                noneOpt.classList.remove('selected');
+              }
+              options.forEach(o => {
+                const inp = o.querySelector('input');
+                inp.disabled = false;
+                o.classList.remove('disabled');
+              });
+              answers[q.name] = [...document.querySelectorAll(`input[name="${q.name}"]:checked`)].map(el => el.value);
+            } else {
+              answers[q.name] = [...document.querySelectorAll(`input[name="${q.name}"]:checked`)].map(el => el.value);
+              if (!answers[q.name].length) {
+                options.forEach(o => o.querySelector('input').disabled = false);
+              }
+            }
+          } else {
+            opt.classList.toggle('selected', input.checked);
+            answers[q.name] = [...document.querySelectorAll(`input[name="${q.name}"]:checked`)].map(el => el.value);
+          }
         }
         savePreferences();
       });

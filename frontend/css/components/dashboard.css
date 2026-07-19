@@ -433,6 +433,49 @@
   .dash-ring-value {
     font-size: 2rem;
   }
+
+  .dash-header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .dash-hero-content {
+    padding: 1rem;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .dash-hero .dash-greeting h1 {
+    font-size: 1.3rem;
+  }
+
+  .dash-notif-panel {
+    width: calc(100vw - 2rem);
+    right: -0.5rem;
+  }
+
+  .dash-insights {
+    padding: 1rem;
+  }
+
+  .dash-empty-state {
+    padding: 2rem 0.75rem;
+  }
+
+  .dash-macro-ring {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .dash-meals {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dash-hero-content {
+    padding: 1.25rem;
+  }
 }
 
 @media (min-width: 768px) {
