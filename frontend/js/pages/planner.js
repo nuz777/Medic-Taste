@@ -114,10 +114,14 @@ export function renderPlanner(container) {
       cardsEl.innerHTML = `
         <div class="planner-empty">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-          <p>No hay comidas planificadas para este día</p>
-          <button class="planner-btn planner-btn-primary" id="plannerEmptyAdd">Agregar comida</button>
+          <p>No hay comidas planificadas para este día.</p>
+          <div class="planner-empty-actions">
+            <button class="planner-btn planner-btn-primary" id="plannerEmptyAdd">Agregar comida</button>
+            <button class="planner-btn" id="plannerEmptyAuto">Sugerir automáticamente</button>
+          </div>
         </div>`;
       document.getElementById('plannerEmptyAdd')?.addEventListener('click', openAddModal);
+      document.getElementById('plannerEmptyAuto')?.addEventListener('click', fillSuggestedMeals);
       return;
     }
 
@@ -337,6 +341,56 @@ export function renderPlanner(container) {
       modal.remove();
       loadDayMeals();
     });
+  }
+
+  async function fillSuggestedMeals() {
+    try {
+      const recipes = await get('/recipes?limit=20');
+      if (!recipes.length) {
+        showEmptyStateMessage('No hay recetas disponibles por ahora.');
+        return;
+      }
+
+      const suggested = [
+        recipes.find(r => r.name?.toLowerCase().includes('ensalada')) || recipes[0],
+        recipes.find(r => r.name?.toLowerCase().includes('pollo')) || recipes[1] || recipes[0],
+        recipes.find(r => r.name?.toLowerCase().includes('arroz')) || recipes[2] || recipes[0],
+        recipes.find(r => r.name?.toLowerCase().includes('smoothie')) || recipes[3] || recipes[0],
+      ].filter(Boolean);
+
+      const slotTypes = ['desayuno', 'almuerzo', 'cena', 'snack'];
+      await Promise.all(slotTypes.map((type, i) => {
+        const recipe = suggested[i];
+        if (!recipe) return Promise.resolve();
+        return post('/planner', {
+          recipe_id: recipe.id,
+          plan_date: selectedDate,
+          meal_type: type,
+        });
+      }));
+
+      logUsage('plan_auto_filled');
+      await loadDayMeals();
+      showEmptyStateMessage('¡Ya quedó el día sugerido!');
+    } catch {
+      showEmptyStateMessage('No se pudieron agregar las sugerencias.');
+    }
+  }
+
+  function showEmptyStateMessage(message) {
+    const cardsEl = document.getElementById('plannerCards');
+    if (!cardsEl) return;
+    cardsEl.innerHTML = `
+      <div class="planner-empty">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <p>${escapeHtml(message)}</p>
+        <div class="planner-empty-actions">
+          <button class="planner-btn planner-btn-primary" id="plannerEmptyAdd">Agregar comida</button>
+          <button class="planner-btn" id="plannerEmptyAuto">Sugerir automáticamente</button>
+        </div>
+      </div>`;
+    document.getElementById('plannerEmptyAdd')?.addEventListener('click', openAddModal);
+    document.getElementById('plannerEmptyAuto')?.addEventListener('click', fillSuggestedMeals);
   }
 
   async function regenerateMeals() {
