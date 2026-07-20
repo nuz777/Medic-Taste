@@ -187,7 +187,7 @@ export function renderRecipes(container) {
   loadRecipes();
 }
 
-async function showRecipeDetail(id) {
+export async function showRecipeDetail(id) {
   try {
     const recipe = await get(`/recipes/${id}`);
     logUsage('recipe_viewed', id);

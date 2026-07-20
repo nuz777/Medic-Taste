@@ -40,7 +40,7 @@ export async function renderDashboard(container) {
       </div>
       <div class="dash-focus-header" style="margin-top:0.25rem">
         <span>Restante <strong id="dashRemaining">--</strong></span>
-        <span>Objetivo <strong id="dashTarget">${CALORIE_TARGET}</strong></span>
+        <span>Objetivo <strong id="dashTarget">${CALORIE_TARGET} CL</strong></span>
       </div>
     </div>
 
@@ -178,13 +178,18 @@ function renderEmptyMealCards(el) {
 async function loadNutrition() {
   const todayStr = new Date().toISOString().split('T')[0];
   try {
-    const data = await get(`/nutrition/day/${todayStr}`);
-    const consumed = data.total_calories || 0;
-    const protein = data.total_protein || 0;
-    const carbs = data.total_carbs || 0;
-    const fat = data.total_fat || 0;
+    const key = `tf_eaten_${todayStr}`;
+    const eaten = JSON.parse(localStorage.getItem(key) || '[]');
 
-    document.getElementById('dashCalValue').textContent = Math.round(consumed);
+    const consumed = eaten.reduce((sum, m) => sum + (m.calories || 0), 0);
+    const protein = eaten.reduce((sum, m) => sum + (m.protein || 0), 0);
+    const carbs = eaten.reduce((sum, m) => sum + (m.carbs || 0), 0);
+    const fat = eaten.reduce((sum, m) => sum + (m.fat || 0), 0);
+
+    const calEl = document.getElementById('dashCalValue');
+    const isComplete = consumed >= CALORIE_TARGET;
+    calEl.textContent = isComplete ? '¡Completado!' : Math.round(consumed);
+    calEl.classList.toggle('completed', isComplete);
     document.getElementById('dashRemaining').textContent = Math.max(0, Math.round(CALORIE_TARGET - consumed));
 
     setRingProgress('dashRingProgress', consumed, CALORIE_TARGET);
@@ -201,7 +206,7 @@ async function loadNutrition() {
     document.getElementById('dashInsightPct').textContent = pct + '%';
     document.getElementById('dashInsightLabel').textContent = `Logro del objetivo ${new Date().toLocaleDateString('es-CO', { month: 'short', day: 'numeric' })} - Ahora`;
   } catch {
-    document.getElementById('dashCalValue').textContent = '--';
+    document.getElementById('dashCalValue').textContent = '0';
   }
 }
 
@@ -278,8 +283,11 @@ function setupBell() {
 
     const rect = bell.getBoundingClientRect();
     const panelWidth = 300;
+    const vw = window.innerWidth;
+    let left = rect.right - panelWidth;
+    if (left < 8) left = Math.max(8, vw - panelWidth - 8);
 
-    panel.style.left = `${rect.right - panelWidth}px`;
+    panel.style.left = `${left}px`;
     panel.style.top = `${rect.bottom + 8}px`;
 
     const close = (ev) => {
@@ -298,8 +306,10 @@ function setupBell() {
       if (!panel) return;
 
       const r = bell.getBoundingClientRect();
+      let left = r.right - panelWidth;
+      if (left < 8) left = Math.max(8, window.innerWidth - panelWidth - 8);
 
-      panel.style.left = `${r.right - panelWidth}px`;
+      panel.style.left = `${left}px`;
       panel.style.top = `${r.bottom + 8}px`;
     };
 

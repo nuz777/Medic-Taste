@@ -1,6 +1,7 @@
 import { get, post, del } from '../services/api.js';
 import { logUsage } from '../services/usage.js';
 import { escapeHtml } from '../utils/escapeHtml.js';
+import { showRecipeDetail } from './recipes.js';
 
 const MEAL_TYPES = ['desayuno', 'almuerzo', 'cena', 'snack'];
 
@@ -106,6 +107,7 @@ export function renderPlanner(container) {
 
   function renderMealCards() {
     const cardsEl = document.getElementById('plannerCards');
+    const isToday = selectedDate === todayStr();
 
     if (!dayMeals.length) {
       cardsEl.innerHTML = `
@@ -135,17 +137,18 @@ export function renderPlanner(container) {
           : `<div class="planner-card-thumb-placeholder">${meta.icon}</div>`;
 
         html += `
-          <div class="planner-card" data-idx="${m._idx}" data-id="${m.id || ''}">
+          <div class="planner-card" data-idx="${m._idx}" data-id="${m.id || ''}" data-recipe-id="${m.recipe_id}">
             <div class="planner-card-icon ${type}">${meta.icon}</div>
             <div class="planner-card-thumb">${thumbHTML}</div>
             <div class="planner-card-info">
               <div class="planner-card-name">${escapeHtml(m.recipe_name)}</div>
               <div class="planner-card-meta">${meta.label}${m.prep_time_minutes ? ' · ' + m.prep_time_minutes + ' min' : ''}</div>
             </div>
-            <div class="planner-card-actions">
-              <button class="planner-card-delete" data-idx="${m._idx}" title="Eliminar">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-              </button>
+            <div class="planner-card-actions" style="display:flex;align-items:center;gap:6px">
+              ${isToday ? `<button class="planner-card-eaten" data-idx="${m._idx}" title="Marcar como comido">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Comido
+              </button>` : `<span class="planner-card-day-label">${meta.label}</span>`}
             </div>
           </div>`;
       });
@@ -159,20 +162,53 @@ export function renderPlanner(container) {
 
     cardsEl.innerHTML = html;
 
-    cardsEl.querySelectorAll('.planner-card-delete').forEach(btn => {
+    cardsEl.querySelectorAll('.planner-card-eaten').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         const idx = parseInt(btn.dataset.idx);
-        removeMeal(idx);
+        markAsEaten(idx);
+      });
+    });
+
+    cardsEl.querySelectorAll('.planner-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        const recipeId = parseInt(card.dataset.recipeId);
+        if (recipeId) showRecipeDetail(recipeId);
       });
     });
 
     document.getElementById('plannerAddBtn')?.addEventListener('click', openAddModal);
   }
 
-  async function removeMeal(idx) {
+  async function markAsEaten(idx) {
     const meal = dayMeals[idx];
     if (!meal) return;
+
+    try {
+      const nutrition = await get(`/nutrition/recipe/${meal.recipe_id}`);
+      const servings = meal.servings || 1;
+      const mealCalories = Math.round((nutrition.total_calories || 0) / servings);
+
+      const key = `tf_eaten_${selectedDate}`;
+      const stored = JSON.parse(localStorage.getItem(key) || '[]');
+      const currentConsumed = stored.reduce((s, m) => s + (m.calories || 0), 0);
+
+      if (currentConsumed + mealCalories > 2000) {
+        showGoalMessage(meal.recipe_name);
+        return;
+      }
+
+      stored.push({
+        recipe_id: meal.recipe_id,
+        name: meal.recipe_name,
+        meal_type: meal.meal_type,
+        calories: mealCalories,
+        protein: Math.round((nutrition.total_protein || 0) / servings),
+        carbs: Math.round((nutrition.total_carbs || 0) / servings),
+        fat: Math.round((nutrition.total_fat || 0) / servings),
+      });
+      localStorage.setItem(key, JSON.stringify(stored));
+    } catch {}
 
     if (meal.id) {
       try { await del(`/planner/${meal.id}`); } catch {}
@@ -180,7 +216,21 @@ export function renderPlanner(container) {
 
     dayMeals.splice(idx, 1);
     renderMealCards();
-    logUsage('plan_item_removed');
+    logUsage('plan_item_eaten');
+  }
+
+  function showGoalMessage(name) {
+    const existing = document.querySelector('.planner-goal-msg');
+    if (existing) existing.remove();
+
+    const msg = document.createElement('div');
+    msg.className = 'planner-goal-msg';
+    msg.innerHTML = `
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>¡Has alcanzado tu objetivo de 2000 calorías! <strong>${escapeHtml(name)}</strong> será para mañana.</span>
+    `;
+    document.getElementById('plannerCards').prepend(msg);
+    setTimeout(() => msg.remove(), 4000);
   }
 
   function openAddModal() {

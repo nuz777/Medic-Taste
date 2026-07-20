@@ -10,11 +10,21 @@ export async function login(email, password) {
 }
 
 export async function register(name, email, password) {
+  clearUserData();
   const data = await post('/auth/register', { name, email, password });
   localStorage.setItem(CONFIG.STORAGE_KEYS.TOKEN, data.token);
   localStorage.setItem(CONFIG.STORAGE_KEYS.USER, JSON.stringify(data.user));
   if (!data.user.onboarding_completed) localStorage.removeItem('tf_questionnaire_done');
   return data;
+}
+
+function clearUserData() {
+  const keys = Object.keys(localStorage);
+  for (const key of keys) {
+    if (key.startsWith('tf_eaten_') || key.startsWith('tf_week_') || key === 'tf_preferences' || key === 'tf_questionnaire_history' || key === 'tf_questionnaire_done') {
+      localStorage.removeItem(key);
+    }
+  }
 }
 
 export async function getMe() {

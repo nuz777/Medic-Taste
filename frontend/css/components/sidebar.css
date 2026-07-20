@@ -40,9 +40,10 @@
   letter-spacing: -0.02em;
 }
 
-.sidebar-header .navbar-logo svg {
-  width: 34px;
-  height: 34px;
+.sidebar-header .navbar-logo svg,
+.sidebar-header .navbar-logo img {
+  width: 48px;
+  height: 48px;
   border-radius: var(--radius-md);
 }
 
@@ -289,6 +290,17 @@ body.sidebar-collapsed .app-main {
   font-size: 17px;
   font-family: var(--font-display);
   font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.app-topbar .navbar-logo img,
+.app-topbar .navbar-logo svg {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
 }
 
 .menu-toggle {
