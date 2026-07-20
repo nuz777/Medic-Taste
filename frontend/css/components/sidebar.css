@@ -170,6 +170,12 @@ body.sidebar-collapsed .app-main {
   stroke-width: 1.75;
 }
 
+@media (max-width: 768px) {
+  .sidebar-link[data-page="shopping"] {
+    display: none !important;
+  }
+}
+
 .sidebar-footer {
   padding: 10px 10px 14px;
   border-top: 1px solid var(--border-subtle);

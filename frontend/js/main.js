@@ -99,13 +99,21 @@ function getPageFromHash() {
 }
 
 function navigate(page) {
+  const isMobile = window.innerWidth <= 768;
+  const safePage = isMobile && page === 'shopping' ? 'dashboard' : page;
+
   sidebarLinks.forEach(link => {
-    link.classList.toggle('active', link.dataset.page === page);
+    link.classList.toggle('active', link.dataset.page === safePage);
   });
 
   toggleSidebar(false);
 
-  const render = routes[page];
+  if (isMobile && page === 'shopping' && window.location.hash !== `#${safePage}`) {
+    window.location.hash = safePage;
+    return;
+  }
+
+  const render = routes[safePage];
   if (render) {
     pageContent.innerHTML = '';
     render(pageContent);
@@ -113,7 +121,7 @@ function navigate(page) {
     pageContent.innerHTML = `
       <div style="text-align:center;padding:4rem 1rem;color:var(--text-secondary);">
         <h2>Próximamente</h2>
-        <p>La vista "${page}" está en desarrollo.</p>
+        <p>La vista "${safePage}" está en desarrollo.</p>
       </div>`;
   }
 }
