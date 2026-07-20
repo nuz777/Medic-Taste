@@ -232,6 +232,10 @@ export function renderShopping(container) {
       cartEl.style.display = 'flex';
       cartEl.style.visibility = 'visible';
       cartEl.style.opacity = '1';
+      if (window.innerWidth <= 768) {
+        cartEl.style.height = 'min(78dvh, 560px)';
+        cartEl.style.maxHeight = 'min(78dvh, 560px)';
+      }
     }
     if (overlay) overlay.classList.add('open');
   }
@@ -245,6 +249,8 @@ export function renderShopping(container) {
         cartEl.style.display = 'flex';
         cartEl.style.visibility = 'visible';
         cartEl.style.opacity = '1';
+        cartEl.style.height = '3.9rem';
+        cartEl.style.maxHeight = '3.9rem';
       }
     }
     if (overlay) overlay.classList.remove('open');
