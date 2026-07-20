@@ -1,4 +1,6 @@
 node_modules/
+.pids/
+logs/
 
 .env
 .env.local
