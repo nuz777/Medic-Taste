@@ -111,17 +111,29 @@ export function renderPlanner(container) {
     const isToday = selectedDate === todayStr();
 
     if (!dayMeals.length) {
+      const calorieGoal = getDailyCalorieGoal();
+      const eatenKey = `tf_eaten_${selectedDate}`;
+      let consumedCalories = 0;
+      try {
+        const stored = JSON.parse(localStorage.getItem(eatenKey) || '[]');
+        consumedCalories = stored.reduce((s, m) => s + (m.calories || 0), 0);
+      } catch {}
+
+      const completedToday = isToday && consumedCalories >= calorieGoal;
+
       cardsEl.innerHTML = `
-        <div class="planner-empty">
+        <div class="planner-empty${completedToday ? ' planner-empty-complete' : ''}">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-          <p>No hay comidas planificadas para este día.</p>
-          <div class="planner-empty-actions">
+          <p>${completedToday ? 'Ya completaste este día. Espera a mañana para seguir.' : 'No hay comidas planificadas para este día.'}</p>
+          ${completedToday ? '' : `<div class="planner-empty-actions">
             <button class="planner-btn planner-btn-primary" id="plannerEmptyAdd">Agregar comida</button>
             <button class="planner-btn" id="plannerEmptyAuto">Sugerir automáticamente</button>
-          </div>
+          </div>`}
         </div>`;
-      document.getElementById('plannerEmptyAdd')?.addEventListener('click', openAddModal);
-      document.getElementById('plannerEmptyAuto')?.addEventListener('click', fillSuggestedMeals);
+      if (!completedToday) {
+        document.getElementById('plannerEmptyAdd')?.addEventListener('click', openAddModal);
+        document.getElementById('plannerEmptyAuto')?.addEventListener('click', fillSuggestedMeals);
+      }
       return;
     }
 
