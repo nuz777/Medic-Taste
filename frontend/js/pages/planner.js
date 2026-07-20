@@ -198,6 +198,8 @@ export function renderPlanner(container) {
 
       if (reachedGoal) {
         showGoalMessage(meal.recipe_name, calorieGoal);
+      } else {
+        showEatenFeedback(meal.recipe_name);
       }
 
       stored.push({
@@ -219,6 +221,26 @@ export function renderPlanner(container) {
     dayMeals.splice(idx, 1);
     renderMealCards();
     logUsage('plan_item_eaten');
+  }
+
+  function showEatenFeedback(name) {
+    const existing = document.querySelector('.planner-eaten-modal');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.className = 'planner-eaten-modal';
+    modal.innerHTML = `
+      <div class="planner-eaten-card">
+        <div class="planner-eaten-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h3>¡Muy bien!</h3>
+        <p>Has marcado <strong>${escapeHtml(name)}</strong> como comida hecha.</p>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+    setTimeout(() => modal.remove(), 1800);
   }
 
   function showGoalMessage(name, calorieGoal) {
