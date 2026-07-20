@@ -186,6 +186,9 @@ export function renderShopping(container) {
             Mi Carrito
           </div>
           <span class="shop-cart-badge" id="cartBadge">0</span>
+          <button class="shop-cart-close" id="cartCloseBtn" aria-label="Cerrar carrito">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
         <div class="shop-cart-items" id="cartItems">
           <div class="shop-cart-empty">
@@ -263,7 +266,18 @@ export function renderShopping(container) {
 
   const cartDragHandle = document.querySelector('.shop-cart-drag-handle');
   if (cartDragHandle) {
-    cartDragHandle.addEventListener('click', closeCart);
+    cartDragHandle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeCart();
+    });
+  }
+
+  const cartCloseBtn = document.getElementById('cartCloseBtn');
+  if (cartCloseBtn) {
+    cartCloseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeCart();
+    });
   }
 
   const cartHeader = document.querySelector('.shop-cart-header');
@@ -460,11 +474,7 @@ export function renderShopping(container) {
 
     const floatBtn = document.getElementById('shopFloatCart');
     if (floatBtn) {
-      if (window.innerWidth <= 768) {
-        floatBtn.classList.add('visible');
-      } else {
-        floatBtn.classList.toggle('visible', totalCount > 0);
-      }
+      floatBtn.classList.toggle('visible', totalCount > 0);
     }
 
     if (!cart.length) {

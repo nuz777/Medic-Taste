@@ -304,6 +304,11 @@
   line-height: 1;
 }
 
+.dash-ring-value.completed {
+  font-size: 1.1rem;
+  color: var(--success, #00C853);
+}
+
 .dash-ring-label {
   font-size: 0.78rem;
   color: var(--text-secondary);

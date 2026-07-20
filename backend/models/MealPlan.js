@@ -3,7 +3,7 @@ const { db } = require('../config/db');
 const MealPlan = {
   async findByDateRange(userId, startDate, endDate) {
     const result = await db.execute({
-      sql: `SELECT mp.*, r.name AS recipe_name, r.photo_url, r.prep_time_minutes
+      sql: `SELECT mp.*, r.name AS recipe_name, r.photo_url, r.prep_time_minutes, r.servings
             FROM meal_plan mp
             JOIN recipes r ON r.id = mp.recipe_id
             WHERE mp.user_id = ? AND mp.plan_date BETWEEN ? AND ?
@@ -15,7 +15,7 @@ const MealPlan = {
 
   async findByDate(userId, date) {
     const result = await db.execute({
-      sql: `SELECT mp.*, r.name AS recipe_name, r.photo_url, r.prep_time_minutes
+      sql: `SELECT mp.*, r.name AS recipe_name, r.photo_url, r.prep_time_minutes, r.servings
             FROM meal_plan mp
             JOIN recipes r ON r.id = mp.recipe_id
             WHERE mp.user_id = ? AND mp.plan_date = ?

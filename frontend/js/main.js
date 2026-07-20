@@ -7,6 +7,7 @@ import { renderFavorites } from './pages/favorites.js';
 import { renderShopping } from './pages/shopping.js';
 import { renderProfile } from './pages/profile.js';
 import { getUser, isAuthenticated, logout, getMe } from './services/authService.js';
+import { checkWeeklyCycle } from './services/weeklyCycle.js';
 
 const sidebar = document.getElementById('sidebar');
 const sidebarOverlay = document.getElementById('sidebarOverlay');
@@ -141,6 +142,8 @@ sidebarLinks.forEach(link => {
     return;
   }
 
+  await checkWeeklyCycle();
+
   window.addEventListener('hashchange', () => {
     navigate(getPageFromHash());
   });
@@ -175,16 +178,10 @@ sidebarLinks.forEach(link => {
           <div class="toast-desc">${tip.desc}</div>
         </div>
       </div>
-      <button class="toast-close" aria-label="Cerrar">&times;</button>
       <div class="toast-progress" style="animation-duration:${dur}ms"></div>`;
-    t.addEventListener('click', e => {
-      if (e.target.closest('.toast-close')) return;
+    t.addEventListener('click', () => {
       dismissToast(t);
       window.location.hash = tip.route;
-    });
-    t.querySelector('.toast-close').addEventListener('click', e => {
-      e.stopPropagation();
-      dismissToast(t);
     });
     container.appendChild(t);
     t._timer = setTimeout(() => dismissToast(t), dur);

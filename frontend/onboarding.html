@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Conozcámonos — Medic-Taste</title>
-  <link rel="icon" href="assets/icons/iconCruz.png">
+  <link rel="icon" href="assets/icons/iconCruz.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/icons/iconCruz.png">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/components/forms.css">
@@ -461,7 +462,7 @@
   <div class="onboarding-wrapper">
     <div class="onboarding-card" id="onboardingCard">
       <a href="/" class="navbar-logo">
-        <img src="assets/icons/iconCruz.png" alt="Medic-Taste" width="64" height="64">
+        <img src="assets/icons/iconCruz.png" alt="Medic-Taste" width="80" height="80">
         Medic-Taste
       </a>
 
@@ -952,6 +953,16 @@
 
         localStorage.setItem('tf_week_plan', JSON.stringify(weekPlan));
         localStorage.setItem('tf_questionnaire_done', 'true');
+
+        const weekStartStr = monday.toISOString().split('T')[0];
+        const weekEndDate = new Date(monday);
+        weekEndDate.setDate(monday.getDate() + 6);
+        localStorage.setItem('tf_week_state', JSON.stringify({
+          weekNumber: 1,
+          weekStart: weekStartStr,
+          weekEnd: weekEndDate.toISOString().split('T')[0],
+          generatedAt: new Date().toISOString(),
+        }));
 
         const allMeals = Object.entries(weekPlan).flatMap(([dateStr, meals]) =>
           meals.map((meal) => ({
