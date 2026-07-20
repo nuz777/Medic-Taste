@@ -44,6 +44,7 @@ sidebarToggle.addEventListener('click', () => {
 const darkToggle = document.getElementById('darkToggle');
 const darkLabel = document.getElementById('darkLabel');
 const savedTheme = localStorage.getItem('tf_theme');
+const WELCOME_MODAL_KEY = 'tf_welcome_shown';
 
 function applyTheme(theme) {
   if (theme === 'dark') {
@@ -58,6 +59,50 @@ function applyTheme(theme) {
     document.documentElement.classList.remove('dark', 'light');
     darkLabel.textContent = 'Modo oscuro';
   }
+}
+
+function isWelcomeModalPending() {
+  return !localStorage.getItem(WELCOME_MODAL_KEY);
+}
+
+function markWelcomeModalShown() {
+  localStorage.setItem(WELCOME_MODAL_KEY, '1');
+}
+
+function showWelcomeModal() {
+  if (!isWelcomeModalPending()) return;
+  markWelcomeModalShown();
+
+  const overlay = document.createElement('div');
+  overlay.className = 'welcome-modal-overlay';
+  overlay.innerHTML = `
+    <div class="welcome-modal" role="dialog" aria-modal="true" aria-labelledby="welcomeModalTitle">
+      <div class="welcome-modal-header">
+        <h3 id="welcomeModalTitle">¡Bienvenido a Medic-Taste!</h3>
+        <p>Tu guía saludable ya está lista: descubre recetas, organiza tus comidas y sigue tus macros.</p>
+      </div>
+      <div class="welcome-modal-content">
+        <div class="welcome-modal-step">Completa tu perfil y preferencias para personalizar tus planes.</div>
+        <div class="welcome-modal-step">Explora recetas nutritivas y guarda las que más te gusten.</div>
+        <div class="welcome-modal-step">Usa el planner para organizar comidas y revisar tu progreso diario.</div>
+      </div>
+      <button class="welcome-modal-close" type="button">¡Comenzar!</button>
+    </div>`;
+
+  function closeModal() {
+    overlay.classList.add('dismiss');
+    overlay.addEventListener('animationend', () => overlay.remove(), { once: true });
+  }
+
+  overlay.addEventListener('click', (event) => {
+    if (event.target === overlay) {
+      closeModal();
+    }
+  });
+
+  overlay.querySelector('.welcome-modal-close')?.addEventListener('click', closeModal);
+  document.body.appendChild(overlay);
+  requestAnimationFrame(() => overlay.classList.add('visible'));
 }
 
 applyTheme(savedTheme || 'auto');
@@ -171,6 +216,10 @@ sidebarLinks.forEach(link => {
 
   navigate(getPageFromHash());
 
+  if (isWelcomeModalPending()) {
+    setTimeout(showWelcomeModal, 500);
+  }
+
   // Toast recommendations
   const TOAST_TIPS = [
     { icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>', title: 'Desayuno saludable', desc: 'Una buena base de proteína te da energía todo el día.', route: 'recipes' },
@@ -189,8 +238,17 @@ sidebarLinks.forEach(link => {
     const container = document.getElementById('toastContainer');
     if (!container) return;
     const dur = 5000;
+    const isMobile = window.innerWidth <= 480;
+
+    if (isMobile) {
+      container.querySelectorAll('.toast').forEach(oldToast => {
+        dismissToast(oldToast);
+      });
+    }
+
     const t = document.createElement('div');
     t.className = 'toast';
+    t.style.willChange = 'transform, opacity';
     t.innerHTML = `
       <div class="toast-body">
         <div class="toast-icon">${tip.icon}</div>
