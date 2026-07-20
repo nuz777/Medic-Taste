@@ -109,17 +109,18 @@ export function renderPlanner(container) {
   function renderMealCards() {
     const cardsEl = document.getElementById('plannerCards');
     const isToday = selectedDate === todayStr();
+    const calorieGoal = getDailyCalorieGoal();
+    const eatenKey = `tf_eaten_${selectedDate}`;
+    let consumedCalories = 0;
 
-    if (!dayMeals.length) {
-      const calorieGoal = getDailyCalorieGoal();
-      const eatenKey = `tf_eaten_${selectedDate}`;
-      let consumedCalories = 0;
-      try {
-        const stored = JSON.parse(localStorage.getItem(eatenKey) || '[]');
-        consumedCalories = stored.reduce((s, m) => s + (m.calories || 0), 0);
-      } catch {}
+    try {
+      const stored = JSON.parse(localStorage.getItem(eatenKey) || '[]');
+      consumedCalories = stored.reduce((s, m) => s + (m.calories || 0), 0);
+    } catch {}
 
-      const completedToday = isToday && consumedCalories >= calorieGoal;
+    const completedToday = isToday && consumedCalories >= calorieGoal;
+
+    if (completedToday || !dayMeals.length) {
       const emptyMessage = completedToday
         ? 'Ya completaste este día. Espera a mañana, sigue así.'
         : 'No hay comidas planificadas para este día.';
