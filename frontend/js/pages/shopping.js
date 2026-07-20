@@ -444,6 +444,9 @@ export function renderShopping(container) {
     }
     saveCart(cart);
     renderCart();
+    if (window.innerWidth <= 768) {
+      openCart();
+    }
     logUsage('cart_item_added', ing.id);
 
     const btn = document.querySelector(`.shop-card-add[data-id="${ing.id}"]`);
