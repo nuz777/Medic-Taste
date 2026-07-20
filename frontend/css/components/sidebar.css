@@ -40,9 +40,10 @@
   letter-spacing: -0.02em;
 }
 
-.sidebar-header .navbar-logo svg {
-  width: 34px;
-  height: 34px;
+.sidebar-header .navbar-logo svg,
+.sidebar-header .navbar-logo img {
+  width: 48px;
+  height: 48px;
   border-radius: var(--radius-md);
 }
 

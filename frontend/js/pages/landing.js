@@ -1,19 +1,22 @@
 const navbar = document.getElementById('navbar');
 const navToggle = document.getElementById('navToggle');
-const navLinks = document.getElementById('navLinks');
+const navClose = document.getElementById('navClose');
+const navMobilePanel = document.getElementById('navMobilePanel');
 const navOverlay = document.getElementById('navOverlay');
 const scrollElements = document.querySelectorAll('.animate-on-scroll');
 
 function toggleMenu(open) {
-  navLinks.classList.toggle('open', open);
+  navMobilePanel.classList.toggle('open', open);
   navOverlay.classList.toggle('open', open);
+  navToggle.classList.toggle('active', open);
   document.body.style.overflow = open ? 'hidden' : '';
 }
 
-navToggle.addEventListener('click', () => toggleMenu(!navLinks.classList.contains('open')));
+navToggle.addEventListener('click', () => toggleMenu(!navMobilePanel.classList.contains('open')));
+navClose.addEventListener('click', () => toggleMenu(false));
 navOverlay.addEventListener('click', () => toggleMenu(false));
 
-navLinks.querySelectorAll('a').forEach(link => {
+navMobilePanel.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', () => toggleMenu(false));
 });
 

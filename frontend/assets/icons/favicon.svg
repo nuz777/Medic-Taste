@@ -1,1 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#4f46e5"/><text x="16" y="23" text-anchor="middle" font-size="20" fill="white">T</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00897B"/>
+      <stop offset="50%" stop-color="#00796B"/>
+      <stop offset="100%" stop-color="#00695C"/>
+    </linearGradient>
+    <linearGradient id="cross" x1="26" y1="16" x2="38" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#E0F2F1"/>
+    </linearGradient>
+    <filter id="shadow" x="-4" y="-2" width="72" height="72">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#004D40" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <!-- Rounded square background -->
+  <rect width="64" height="64" rx="16" fill="url(#bg)" filter="url(#shadow)"/>
+  <!-- Left eye shape -->
+  <path d="M6 32 C6 32, 14 20, 26 28 C18 24, 10 28, 6 32Z" fill="#B2DFDB" opacity="0.5"/>
+  <path d="M6 32 C6 32, 14 44, 26 36 C18 40, 10 36, 6 32Z" fill="#80CBC4" opacity="0.4"/>
+  <!-- Right eye shape -->
+  <path d="M58 32 C58 32, 50 20, 38 28 C46 24, 54 28, 58 32Z" fill="#B2DFDB" opacity="0.5"/>
+  <path d="M58 32 C58 32, 50 44, 38 36 C46 40, 54 36, 58 32Z" fill="#80CBC4" opacity="0.4"/>
+  <!-- Medical cross -->
+  <rect x="28" y="14" width="8" height="36" rx="3" fill="url(#cross)"/>
+  <rect x="14" y="28" width="36" height="8" rx="3" fill="url(#cross)"/>
+  <!-- Cross center highlight -->
+  <rect x="29.5" y="29.5" width="5" height="5" rx="1" fill="#fff" opacity="0.6"/>
+</svg>
