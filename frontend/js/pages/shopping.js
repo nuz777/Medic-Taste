@@ -227,14 +227,22 @@ export function renderShopping(container) {
   function openCart() {
     const cartEl = document.getElementById('shopCart');
     const overlay = document.getElementById('shopCartOverlay');
-    if (cartEl) cartEl.classList.add('expanded');
+    if (cartEl) {
+      cartEl.classList.add('expanded');
+      cartEl.style.display = 'flex';
+    }
     if (overlay) overlay.classList.add('open');
   }
 
   function closeCart() {
     const cartEl = document.getElementById('shopCart');
     const overlay = document.getElementById('shopCartOverlay');
-    if (cartEl) cartEl.classList.remove('expanded');
+    if (cartEl) {
+      cartEl.classList.remove('expanded');
+      if (window.innerWidth <= 768) {
+        cartEl.style.display = 'flex';
+      }
+    }
     if (overlay) overlay.classList.remove('open');
   }
 
