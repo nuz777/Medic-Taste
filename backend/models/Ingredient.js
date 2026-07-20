@@ -1,4 +1,4 @@
-const { pool } = require('../config/db');
+const { db } = require('../config/db');
 
 const Ingredient = {
   async findAll({ category, search } = {}) {
@@ -13,27 +13,27 @@ const Ingredient = {
       params.push(`%${search}%`);
     }
     sql += ' ORDER BY category, name';
-    const [rows] = await pool.query(sql, params);
-    return rows;
+    const result = await db.execute({ sql, args: params });
+    return result.rows;
   },
 
   async findById(id) {
-    const [rows] = await pool.query('SELECT * FROM ingredients WHERE id = ?', [id]);
-    return rows[0];
+    const result = await db.execute({ sql: 'SELECT * FROM ingredients WHERE id = ?', args: [id] });
+    return result.rows[0];
   },
 
   async findByName(name) {
-    const [rows] = await pool.query('SELECT * FROM ingredients WHERE name = ?', [name]);
-    return rows[0];
+    const result = await db.execute({ sql: 'SELECT * FROM ingredients WHERE name = ?', args: [name] });
+    return result.rows[0];
   },
 
   async create({ name, category, price_per_unit, calories_per_100g, protein_per_100g, carbs_per_100g, fat_per_100g }) {
-    const [result] = await pool.query(
-      `INSERT INTO ingredients (name, category, price_per_unit, calories_per_100g, protein_per_100g, carbs_per_100g, fat_per_100g)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [name, category, price_per_unit || null, calories_per_100g || null, protein_per_100g || null, carbs_per_100g || null, fat_per_100g || null]
-    );
-    return result.insertId;
+    const result = await db.execute({
+      sql: `INSERT INTO ingredients (name, category, price_per_unit, calories_per_100g, protein_per_100g, carbs_per_100g, fat_per_100g)
+            VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      args: [name, category, price_per_unit || null, calories_per_100g || null, protein_per_100g || null, carbs_per_100g || null, fat_per_100g || null],
+    });
+    return Number(result.lastInsertRowid);
   },
 
   async update(id, fields) {
@@ -48,11 +48,11 @@ const Ingredient = {
     }
     if (!set.length) return;
     params.push(id);
-    await pool.query(`UPDATE ingredients SET ${set.join(', ')} WHERE id = ?`, params);
+    await db.execute({ sql: `UPDATE ingredients SET ${set.join(', ')} WHERE id = ?`, args: params });
   },
 
   async remove(id) {
-    await pool.query('DELETE FROM ingredients WHERE id = ?', [id]);
+    await db.execute({ sql: 'DELETE FROM ingredients WHERE id = ?', args: [id] });
   },
 };
 

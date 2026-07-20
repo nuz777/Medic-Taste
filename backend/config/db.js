@@ -1,27 +1,20 @@
-const mysql = require('mysql2/promise');
+const { createClient } = require('@libsql/client');
 require('dotenv').config();
 
-const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT || 3306,
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'tasteflow',
-  charset: 'utf8mb4',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
+const db = createClient({
+  url: process.env.TURSO_DB_URL || 'file:./medic-taste.db',
+  authToken: process.env.TURSO_AUTH_TOKEN || undefined,
 });
 
 async function testConnection() {
   try {
-    const connection = await pool.getConnection();
-    console.log('✅ Conectado a MySQL correctamente');
-    connection.release();
+    await db.execute('SELECT 1');
+    const mode = process.env.TURSO_DB_URL?.startsWith('file:') ? 'SQLite local' : 'Turso cloud';
+    console.log(`✅ Conectado a ${mode} correctamente`);
   } catch (error) {
-    console.error('❌ Error al conectar con MySQL:', error.message);
+    console.error('❌ Error al conectar:', error.message);
     process.exit(1);
   }
 }
 
-module.exports = { pool, testConnection };
+module.exports = { db, testConnection };
