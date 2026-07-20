@@ -19,6 +19,7 @@ const suggestionRoutes = require('./routes/suggestion.routes');
 const pdfRoutes = require('./routes/pdf.routes');
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 
 const allowedOrigins = process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(',') : [];
