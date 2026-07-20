@@ -1,6 +1,7 @@
 import { get, post, del } from '../services/api.js';
 import { logUsage } from '../services/usage.js';
 import { escapeHtml } from '../utils/escapeHtml.js';
+import { getDailyCalorieGoal } from '../utils/calorieGoal.js';
 import { showRecipeDetail } from './recipes.js';
 
 const MEAL_TYPES = ['desayuno', 'almuerzo', 'cena', 'snack'];
@@ -192,10 +193,11 @@ export function renderPlanner(container) {
       const key = `tf_eaten_${selectedDate}`;
       const stored = JSON.parse(localStorage.getItem(key) || '[]');
       const currentConsumed = stored.reduce((s, m) => s + (m.calories || 0), 0);
+      const calorieGoal = getDailyCalorieGoal();
+      const reachedGoal = currentConsumed + mealCalories >= calorieGoal;
 
-      if (currentConsumed + mealCalories > 2000) {
-        showGoalMessage(meal.recipe_name);
-        return;
+      if (reachedGoal) {
+        showGoalMessage(meal.recipe_name, calorieGoal);
       }
 
       stored.push({
@@ -219,7 +221,7 @@ export function renderPlanner(container) {
     logUsage('plan_item_eaten');
   }
 
-  function showGoalMessage(name) {
+  function showGoalMessage(name, calorieGoal) {
     const existing = document.querySelector('.planner-goal-msg');
     if (existing) existing.remove();
 
@@ -227,7 +229,7 @@ export function renderPlanner(container) {
     msg.className = 'planner-goal-msg';
     msg.innerHTML = `
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <span>¡Has alcanzado tu objetivo de 2000 calorías! <strong>${escapeHtml(name)}</strong> será para mañana.</span>
+      <span>¡Has alcanzado tu objetivo de ${calorieGoal} calorías! <strong>${escapeHtml(name)}</strong> será para mañana.</span>
     `;
     document.getElementById('plannerCards').prepend(msg);
     setTimeout(() => msg.remove(), 4000);

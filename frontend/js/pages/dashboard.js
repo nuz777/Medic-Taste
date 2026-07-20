@@ -1,8 +1,8 @@
 import { get } from '../services/api.js';
 import { getUser } from '../services/authService.js';
 import { escapeHtml } from '../utils/escapeHtml.js';
+import { getDailyCalorieGoal, formatDailyCalorieGoal } from '../utils/calorieGoal.js';
 
-const CALORIE_TARGET = 2000;
 const MACRO_TARGETS = { protein: 77, carbs: 136, fat: 40 };
 
 const MEAL_ICONS = {
@@ -40,7 +40,7 @@ export async function renderDashboard(container) {
       </div>
       <div class="dash-focus-header" style="margin-top:0.25rem">
         <span>Restante <strong id="dashRemaining">--</strong></span>
-        <span>Objetivo <strong id="dashTarget">${CALORIE_TARGET} CL</strong></span>
+        <span>Objetivo <strong id="dashTarget">${formatDailyCalorieGoal(getDailyCalorieGoal())}</strong></span>
       </div>
     </div>
 
@@ -181,18 +181,19 @@ async function loadNutrition() {
     const key = `tf_eaten_${todayStr}`;
     const eaten = JSON.parse(localStorage.getItem(key) || '[]');
 
+    const target = getDailyCalorieGoal();
     const consumed = eaten.reduce((sum, m) => sum + (m.calories || 0), 0);
     const protein = eaten.reduce((sum, m) => sum + (m.protein || 0), 0);
     const carbs = eaten.reduce((sum, m) => sum + (m.carbs || 0), 0);
     const fat = eaten.reduce((sum, m) => sum + (m.fat || 0), 0);
 
     const calEl = document.getElementById('dashCalValue');
-    const isComplete = consumed >= CALORIE_TARGET;
+    const isComplete = consumed >= target;
     calEl.textContent = isComplete ? '¡Completado!' : Math.round(consumed);
     calEl.classList.toggle('completed', isComplete);
-    document.getElementById('dashRemaining').textContent = Math.max(0, Math.round(CALORIE_TARGET - consumed));
+    document.getElementById('dashRemaining').textContent = Math.max(0, Math.round(target - consumed));
 
-    setRingProgress('dashRingProgress', consumed, CALORIE_TARGET);
+    setRingProgress('dashRingProgress', consumed, target);
     setMacroRing('protein', protein, MACRO_TARGETS.protein);
     setMacroRing('carbs', carbs, MACRO_TARGETS.carbs);
     setMacroRing('fat', fat, MACRO_TARGETS.fat);
@@ -201,7 +202,7 @@ async function loadNutrition() {
     document.getElementById('dashCarbsVal').textContent = `${Math.round(carbs)}/${MACRO_TARGETS.carbs}g`;
     document.getElementById('dashFatVal').textContent = `${Math.round(fat)}/${MACRO_TARGETS.fat}g`;
 
-    const pct = Math.min(100, Math.round((consumed / CALORIE_TARGET) * 100));
+    const pct = Math.min(100, Math.round((consumed / target) * 100));
     document.getElementById('dashInsightFill').style.width = pct + '%';
     document.getElementById('dashInsightPct').textContent = pct + '%';
     document.getElementById('dashInsightLabel').textContent = `Logro del objetivo ${new Date().toLocaleDateString('es-CO', { month: 'short', day: 'numeric' })} - Ahora`;
