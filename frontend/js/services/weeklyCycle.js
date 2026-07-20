@@ -4,6 +4,7 @@ import { CONFIG } from '../config.js';
 const WEEK_STATE_KEY = 'tf_week_state';
 const HISTORY_KEY = 'tf_questionnaire_history';
 const PREFS_KEY = 'tf_preferences';
+const PROMPTED_WEEK_KEY = 'tf_week_modal_prompted';
 
 function getMonday(date) {
   const d = new Date(date);
@@ -16,6 +17,18 @@ function getMonday(date) {
 
 function toISODate(d) {
   return d.toISOString().split('T')[0];
+}
+
+function getWeekBounds(date) {
+  const weekStart = getMonday(date);
+  const weekEndDate = new Date(weekStart);
+  weekEndDate.setDate(weekStart.getDate() + 6);
+  return {
+    weekStart,
+    weekStartStr: toISODate(weekStart),
+    weekEndDate,
+    weekEndStr: toISODate(weekEndDate),
+  };
 }
 
 function loadState() {
@@ -44,6 +57,14 @@ function loadWeekPlan() {
 
 function savePrefs(prefs) {
   localStorage.setItem(PREFS_KEY, JSON.stringify(prefs));
+}
+
+function loadPromptedWeek() {
+  try { return localStorage.getItem(PROMPTED_WEEK_KEY); } catch { return null; }
+}
+
+function savePromptedWeek(weekStart) {
+  localStorage.setItem(PROMPTED_WEEK_KEY, weekStart);
 }
 
 function getWeekNumber(date) {
@@ -328,35 +349,50 @@ export async function checkWeeklyCycle() {
   let state = loadState();
   const now = new Date();
   const today = toISODate(now);
+  const bounds = getWeekBounds(now);
+
+  const promptedWeek = loadPromptedWeek();
 
   if (!state) {
     const existingPlan = loadWeekPlan();
     if (existingPlan) {
-      const weekStart = getMonday(now);
-      const weekEndDate = new Date(weekStart);
-      weekEndDate.setDate(weekStart.getDate() + 6);
       state = {
         weekNumber: 1,
-        weekStart: toISODate(weekStart),
-        weekEnd: toISODate(weekEndDate),
+        weekStart: bounds.weekStartStr,
+        weekEnd: bounds.weekEndStr,
         generatedAt: new Date().toISOString(),
+        status: 'active',
       };
       saveState(state);
+      savePromptedWeek(bounds.weekStartStr);
+      return;
     }
   }
 
-  if (state) {
-    const weekEnd = new Date(state.weekEnd + 'T23:59:59');
-    if (now <= weekEnd) return;
+  if (state && state.weekStart === bounds.weekStartStr) {
+    return;
+  }
+
+  if (promptedWeek === bounds.weekStartStr) {
+    return;
   }
 
   const history = loadHistory();
   const currentPrefs = loadPrefs();
-  const weekStart = getMonday(now);
-  const weekStartStr = toISODate(weekStart);
-  const weekEndDate = new Date(weekStart);
-  weekEndDate.setDate(weekStart.getDate() + 6);
-  const weekEndStr = toISODate(weekEndDate);
+  const weekStart = bounds.weekStart;
+  const weekStartStr = bounds.weekStartStr;
+  const weekEndDate = bounds.weekEndDate;
+  const weekEndStr = bounds.weekEndStr;
+
+  saveState({
+    weekNumber: (state && state.weekNumber) || history.length + 1,
+    weekStart: weekStartStr,
+    weekEnd: weekEndStr,
+    generatedAt: new Date().toISOString(),
+    status: 'pending',
+  });
+
+  savePromptedWeek(weekStartStr);
 
   const questions = generateAdaptiveQuestions(history, currentPrefs);
   const answers = await showWeeklyModal(questions);
@@ -397,5 +433,6 @@ export async function checkWeeklyCycle() {
     weekStart: weekStartStr,
     weekEnd: weekEndStr,
     generatedAt: new Date().toISOString(),
+    status: 'completed',
   });
 }
