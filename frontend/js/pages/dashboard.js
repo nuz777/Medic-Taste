@@ -100,6 +100,43 @@ export async function renderDashboard(container) {
         <span id="dashInsightPct">0%</span>
       </div>
     </div>
+
+    <div class="dash-guide">
+      <div class="dash-guide-card">
+        <h3>¿Cómo funciona?</h3>
+        <ul>
+          <li>Planifica tus comidas desde el planificador.</li>
+          <li>Marca cada comida como hecha cuando la termines.</li>
+          <li>El dashboard actualiza tu progreso automáticamente.</li>
+        </ul>
+      </div>
+
+      <div class="dash-guide-card">
+        <h3>Qué debes hacer hoy</h3>
+        <ul>
+          <li>Elige una comida saludable para este día.</li>
+          <li>Revisa tus macros y aproxima tu meta.</li>
+          <li>Si ya completaste tu objetivo, puedes descansar y volver mañana.</li>
+        </ul>
+      </div>
+
+      <div class="dash-guide-card dash-guide-card-macros">
+        <h3>Qué significa tu progreso</h3>
+        <div class="dash-guide-metric">
+          <span>Proteína</span>
+          <strong id="dashGuideProtein">0/77g</strong>
+        </div>
+        <div class="dash-guide-metric">
+          <span>Carbohidratos</span>
+          <strong id="dashGuideCarbs">0/136g</strong>
+        </div>
+        <div class="dash-guide-metric">
+          <span>Grasas</span>
+          <strong id="dashGuideFat">0/40g</strong>
+        </div>
+        <p class="dash-guide-tip">Un valor como 108/77g significa que ya consumiste 108g y tu meta es 77g. Lo mismo aplica para carbohidratos y grasas.</p>
+      </div>
+    </div>
   `;
 
 
@@ -201,6 +238,10 @@ async function loadNutrition() {
     document.getElementById('dashProteinVal').textContent = `${Math.round(protein)}/${MACRO_TARGETS.protein}g`;
     document.getElementById('dashCarbsVal').textContent = `${Math.round(carbs)}/${MACRO_TARGETS.carbs}g`;
     document.getElementById('dashFatVal').textContent = `${Math.round(fat)}/${MACRO_TARGETS.fat}g`;
+
+    document.getElementById('dashGuideProtein').textContent = `${Math.round(protein)}/${MACRO_TARGETS.protein}g`;
+    document.getElementById('dashGuideCarbs').textContent = `${Math.round(carbs)}/${MACRO_TARGETS.carbs}g`;
+    document.getElementById('dashGuideFat').textContent = `${Math.round(fat)}/${MACRO_TARGETS.fat}g`;
 
     const pct = Math.min(100, Math.round((consumed / target) * 100));
     document.getElementById('dashInsightFill').style.width = pct + '%';

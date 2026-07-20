@@ -412,6 +412,66 @@
   color: var(--text-muted);
 }
 
+.dash-guide {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-top: 1.2rem;
+}
+
+.dash-guide-card {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.dash-guide-card h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 0.7rem;
+}
+
+.dash-guide-card ul {
+  margin: 0;
+  padding-left: 1rem;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.dash-guide-card-macros {
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--surface) 100%);
+}
+
+.dash-guide-metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.dash-guide-metric:last-of-type {
+  border-bottom: 0;
+}
+
+.dash-guide-metric strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.dash-guide-tip {
+  margin: 0.75rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
 .dash-empty-state {
   text-align: center;
   padding: 3rem 1rem;
@@ -472,6 +532,14 @@
     padding: 1rem;
   }
 
+  .dash-guide {
+    grid-template-columns: 1fr;
+  }
+
+  .dash-guide-card {
+    padding: 0.9rem;
+  }
+
   .dash-empty-state {
     padding: 2rem 0.75rem;
   }
@@ -489,6 +557,10 @@
 
   .dash-hero-content {
     padding: 1.25rem;
+  }
+
+  .dash-guide {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
