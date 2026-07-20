@@ -120,11 +120,14 @@ export function renderPlanner(container) {
       } catch {}
 
       const completedToday = isToday && consumedCalories >= calorieGoal;
+      const emptyMessage = completedToday
+        ? 'Ya completaste este día. Espera a mañana, sigue así.'
+        : 'No hay comidas planificadas para este día.';
 
       cardsEl.innerHTML = `
         <div class="planner-empty${completedToday ? ' planner-empty-complete' : ''}">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-          <p>${completedToday ? 'Ya completaste este día. Espera a mañana para seguir.' : 'No hay comidas planificadas para este día.'}</p>
+          <p>${emptyMessage}</p>
           ${completedToday ? '' : `<div class="planner-empty-actions">
             <button class="planner-btn planner-btn-primary" id="plannerEmptyAdd">Agregar comida</button>
             <button class="planner-btn" id="plannerEmptyAuto">Sugerir automáticamente</button>
