@@ -278,8 +278,11 @@ function setupBell() {
 
     const rect = bell.getBoundingClientRect();
     const panelWidth = 300;
+    const vw = window.innerWidth;
+    let left = rect.right - panelWidth;
+    if (left < 8) left = Math.max(8, vw - panelWidth - 8);
 
-    panel.style.left = `${rect.right - panelWidth}px`;
+    panel.style.left = `${left}px`;
     panel.style.top = `${rect.bottom + 8}px`;
 
     const close = (ev) => {
@@ -298,8 +301,10 @@ function setupBell() {
       if (!panel) return;
 
       const r = bell.getBoundingClientRect();
+      let left = r.right - panelWidth;
+      if (left < 8) left = Math.max(8, window.innerWidth - panelWidth - 8);
 
-      panel.style.left = `${r.right - panelWidth}px`;
+      panel.style.left = `${left}px`;
       panel.style.top = `${r.bottom + 8}px`;
     };
 
