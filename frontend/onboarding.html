@@ -494,7 +494,23 @@
     </div>
   </div>
 
+
+  <button class="fab-dark-toggle" id="darkToggle" aria-label="Cambiar tema" type="button">
+  <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="4"/>
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+  </svg>
+  <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>
+  </svg>
+</button>
+
   <script type="module">
+
+
+
+
+
     import { get, post } from './js/services/api.js';
     import { CONFIG } from './js/config.js';
     import { isAuthenticated, completeOnboarding } from './js/services/authService.js';
@@ -993,6 +1009,30 @@
     }
 
     render();
+
+
+    /* ---------- Theme toggle ---------- */
+const THEME_KEY = 'tf_theme'; // ajusta este nombre si el resto del sitio usa otra clave
+const root = document.documentElement;
+
+function applyTheme(theme) {
+  root.classList.remove('dark', 'light');
+  if (theme === 'dark' || theme === 'light') {
+    root.classList.add(theme);
+  }
+  // si theme es null/'system', no se agrega clase y manda prefers-color-scheme
+}
+
+const savedTheme = localStorage.getItem(THEME_KEY);
+applyTheme(savedTheme);
+
+document.getElementById('darkToggle').addEventListener('click', () => {
+  const isDark = root.classList.contains('dark') ||
+    (!root.classList.contains('light') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const next = isDark ? 'light' : 'dark';
+  applyTheme(next);
+  localStorage.setItem(THEME_KEY, next);
+});
   </script>
 </body>
 </html>
