@@ -21,7 +21,9 @@ const userEmail = document.getElementById('userEmail');
 const userAvatar = document.getElementById('userAvatar');
 
 if (!isAuthenticated()) {
-  window.location.href = '/login.html';
+  if (window.location.pathname !== '/login.html' && window.location.pathname !== '/register.html') {
+    window.location.replace('/login.html');
+  }
 }
 
 function toggleSidebar(open) {
@@ -116,7 +118,16 @@ function navigate(page) {
   const render = routes[safePage];
   if (render) {
     pageContent.innerHTML = '';
-    render(pageContent);
+    try {
+      render(pageContent);
+    } catch (error) {
+      console.error('[Main] render error:', error);
+      pageContent.innerHTML = `
+        <div style="text-align:center;padding:4rem 1rem;color:var(--text-secondary);">
+          <h2>No se pudo cargar esta vista</h2>
+          <p>Intenta recargar la página o volver al dashboard.</p>
+        </div>`;
+    }
   } else {
     pageContent.innerHTML = `
       <div style="text-align:center;padding:4rem 1rem;color:var(--text-secondary);">
@@ -146,7 +157,9 @@ sidebarLinks.forEach(link => {
   } catch {}
 
   if (!hasCompletedQuestionnaire()) {
-    window.location.href = '/onboarding.html';
+    if (window.location.pathname !== '/onboarding.html') {
+      window.location.replace('/onboarding.html');
+    }
     return;
   }
 
