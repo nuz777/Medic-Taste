@@ -1,183 +1,147 @@
-CREATE DATABASE IF NOT EXISTS medic_taste
-  DEFAULT CHARACTER SET utf8mb4
-  DEFAULT COLLATE utf8mb4_unicode_ci;
-
-USE medic_taste;
-
 -- -----------------------------------------------------------
 -- Usuarios
 -- -----------------------------------------------------------
 CREATE TABLE IF NOT EXISTS users (
-  id                    INT AUTO_INCREMENT PRIMARY KEY,
-  name                  VARCHAR(255) NOT NULL,
-  email                 VARCHAR(255) NOT NULL UNIQUE,
-  password              VARCHAR(255) NOT NULL,
-  onboarding_completed  TINYINT(1)   NOT NULL DEFAULT 0,
-  photo_url             VARCHAR(500) DEFAULT NULL,
-  created_at            TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  id                    INTEGER PRIMARY KEY AUTOINCREMENT,
+  name                  TEXT NOT NULL,
+  email                 TEXT NOT NULL UNIQUE,
+  password              TEXT NOT NULL,
+  onboarding_completed  INTEGER NOT NULL DEFAULT 0,
+  photo_url             TEXT DEFAULT NULL,
+  created_at            TEXT DEFAULT (datetime('now'))
+);
 
 -- -----------------------------------------------------------
 -- Recetas
 -- -----------------------------------------------------------
 CREATE TABLE IF NOT EXISTS recipes (
-  id               INT AUTO_INCREMENT PRIMARY KEY,
-  name             VARCHAR(255) NOT NULL,
-  photo_url        VARCHAR(500) DEFAULT NULL,
+  id               INTEGER PRIMARY KEY AUTOINCREMENT,
+  name             TEXT NOT NULL,
+  photo_url        TEXT DEFAULT NULL,
   description      TEXT DEFAULT NULL,
-  servings         INT NOT NULL DEFAULT 4,
-  prep_time_minutes INT DEFAULT NULL,
-  diet_tags        VARCHAR(255) DEFAULT NULL COMMENT 'comma-separated diet tags',
-  created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  servings         INTEGER NOT NULL DEFAULT 4,
+  prep_time_minutes INTEGER DEFAULT NULL,
+  diet_tags        TEXT DEFAULT NULL,
+  created_at       TEXT DEFAULT (datetime('now'))
+);
 
 -- -----------------------------------------------------------
 -- Ingredientes
 -- -----------------------------------------------------------
 CREATE TABLE IF NOT EXISTS ingredients (
-  id                INT AUTO_INCREMENT PRIMARY KEY,
-  name              VARCHAR(255) NOT NULL,
-  category          VARCHAR(100) DEFAULT NULL,
-  price_per_unit    DECIMAL(10,2) DEFAULT NULL COMMENT 'precio en COP por unidad de venta',
-  calories_per_100g DECIMAL(8,2) DEFAULT NULL,
-  protein_per_100g  DECIMAL(8,2) DEFAULT NULL,
-  carbs_per_100g    DECIMAL(8,2) DEFAULT NULL,
-  fat_per_100g      DECIMAL(8,2) DEFAULT NULL,
-  grams_per_unit    DECIMAL(8,2) DEFAULT NULL COMMENT 'peso en gramos de 1 unidad (para unidad/ml)'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  id                INTEGER PRIMARY KEY AUTOINCREMENT,
+  name              TEXT NOT NULL,
+  category          TEXT DEFAULT NULL,
+  price_per_unit    REAL DEFAULT NULL,
+  calories_per_100g REAL DEFAULT NULL,
+  protein_per_100g  REAL DEFAULT NULL,
+  carbs_per_100g    REAL DEFAULT NULL,
+  fat_per_100g      REAL DEFAULT NULL,
+  grams_per_unit    REAL DEFAULT NULL
+);
 
--- Helper: create index only if it doesn't exist
-DROP PROCEDURE IF EXISTS safe_create_index;
-DELIMITER //
-CREATE PROCEDURE safe_create_index(
-  IN p_table VARCHAR(64), IN p_index VARCHAR(64), IN p_cols VARCHAR(255)
-)
-BEGIN
-  DECLARE cnt INT DEFAULT 0;
-  SELECT COUNT(*) INTO cnt FROM information_schema.statistics
-  WHERE table_schema = DATABASE() AND table_name = p_table AND index_name = p_index;
-  IF cnt = 0 THEN
-    SET @sql = CONCAT('CREATE INDEX ', p_index, ' ON ', p_table, '(', p_cols, ')');
-    PREPARE stmt FROM @sql;
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
-  END IF;
-END //
-DELIMITER ;
-
-CALL safe_create_index('ingredients', 'idx_ingredients_category', 'category');
+CREATE INDEX IF NOT EXISTS idx_ingredients_category ON ingredients(category);
 
 -- -----------------------------------------------------------
 -- Ingredientes de cada receta (join table)
 -- -----------------------------------------------------------
 CREATE TABLE IF NOT EXISTS recipe_ingredients (
-  recipe_id      INT NOT NULL,
-  ingredient_id  INT NOT NULL,
-  amount         DECIMAL(10,2) NOT NULL,
-  unit           VARCHAR(50) NOT NULL,
+  recipe_id      INTEGER NOT NULL,
+  ingredient_id  INTEGER NOT NULL,
+  amount         REAL NOT NULL,
+  unit           TEXT NOT NULL,
   PRIMARY KEY (recipe_id, ingredient_id),
   FOREIGN KEY (recipe_id)     REFERENCES recipes(id)     ON DELETE CASCADE,
   FOREIGN KEY (ingredient_id) REFERENCES ingredients(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+);
 
 -- -----------------------------------------------------------
 -- Pasos de cada receta
 -- -----------------------------------------------------------
 CREATE TABLE IF NOT EXISTS recipe_steps (
-  id            INT AUTO_INCREMENT PRIMARY KEY,
-  recipe_id     INT NOT NULL,
-  step_number   INT NOT NULL,
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  recipe_id     INTEGER NOT NULL,
+  step_number   INTEGER NOT NULL,
   instruction   TEXT NOT NULL,
-  timer_seconds INT DEFAULT NULL,
+  timer_seconds INTEGER DEFAULT NULL,
   FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+);
 
--- Helper: create index only if it doesn't exist
-DROP PROCEDURE IF EXISTS safe_create_index;
-DELIMITER //
-CREATE PROCEDURE safe_create_index(
-  IN p_table VARCHAR(64), IN p_index VARCHAR(64), IN p_cols VARCHAR(255)
-)
-BEGIN
-  DECLARE cnt INT DEFAULT 0;
-  SELECT COUNT(*) INTO cnt FROM information_schema.statistics
-  WHERE table_schema = DATABASE() AND table_name = p_table AND index_name = p_index;
-  IF cnt = 0 THEN
-    SET @sql = CONCAT('CREATE INDEX ', p_index, ' ON ', p_table, '(', p_cols, ')');
-    PREPARE stmt FROM @sql;
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
-  END IF;
-END //
-DELIMITER ;
-
-CALL safe_create_index('recipe_steps', 'idx_steps_recipe', 'recipe_id');
+CREATE INDEX IF NOT EXISTS idx_steps_recipe ON recipe_steps(recipe_id);
 
 -- -----------------------------------------------------------
 -- Planificador semanal
 -- -----------------------------------------------------------
 CREATE TABLE IF NOT EXISTS meal_plan (
-  id         INT AUTO_INCREMENT PRIMARY KEY,
-  user_id    INT NOT NULL,
-  recipe_id  INT NOT NULL,
-  plan_date  DATE NOT NULL,
-  meal_type  VARCHAR(50) NOT NULL COMMENT 'desayuno | almuerzo | cena | snack',
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id    INTEGER NOT NULL,
+  recipe_id  INTEGER NOT NULL,
+  plan_date  TEXT NOT NULL,
+  meal_type  TEXT NOT NULL,
   FOREIGN KEY (user_id)   REFERENCES users(id)   ON DELETE CASCADE,
   FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+);
 
-CALL safe_create_index('meal_plan', 'idx_meal_plan_date', 'plan_date');
+CREATE INDEX IF NOT EXISTS idx_meal_plan_date ON meal_plan(plan_date);
 
 -- -----------------------------------------------------------
 -- Favoritos
 -- -----------------------------------------------------------
 CREATE TABLE IF NOT EXISTS favorites (
-  id         INT AUTO_INCREMENT PRIMARY KEY,
-  user_id    INT NOT NULL,
-  recipe_id  INT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY uq_favorites (user_id, recipe_id),
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id    INTEGER NOT NULL,
+  recipe_id  INTEGER NOT NULL,
+  created_at TEXT DEFAULT (datetime('now')),
+  UNIQUE (user_id, recipe_id),
   FOREIGN KEY (user_id)   REFERENCES users(id)   ON DELETE CASCADE,
   FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+);
 
 -- -----------------------------------------------------------
 -- Colecciones
 -- -----------------------------------------------------------
 CREATE TABLE IF NOT EXISTS collections (
-  id      INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT NOT NULL,
-  name    VARCHAR(255) NOT NULL,
+  id      INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  name    TEXT NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+);
 
 -- -----------------------------------------------------------
 -- Recetas dentro de cada colección (join table)
 -- -----------------------------------------------------------
 CREATE TABLE IF NOT EXISTS collection_recipes (
-  collection_id INT NOT NULL,
-  recipe_id     INT NOT NULL,
+  collection_id INTEGER NOT NULL,
+  recipe_id     INTEGER NOT NULL,
   PRIMARY KEY (collection_id, recipe_id),
   FOREIGN KEY (collection_id) REFERENCES collections(id) ON DELETE CASCADE,
   FOREIGN KEY (recipe_id)     REFERENCES recipes(id)     ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+);
 
 -- -----------------------------------------------------------
 -- Estadísticas de uso
 -- -----------------------------------------------------------
 CREATE TABLE IF NOT EXISTS usage_stats (
-  id          INT AUTO_INCREMENT PRIMARY KEY,
-  user_id     INT DEFAULT NULL,
-  action_type VARCHAR(100) NOT NULL,
-  recipe_id   INT DEFAULT NULL,
-  created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id     INTEGER DEFAULT NULL,
+  action_type TEXT NOT NULL,
+  recipe_id   INTEGER DEFAULT NULL,
+  created_at  TEXT DEFAULT (datetime('now')),
   FOREIGN KEY (user_id)   REFERENCES users(id)   ON DELETE SET NULL,
   FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+);
 
-CALL safe_create_index('usage_stats', 'idx_stats_action', 'action_type');
-CALL safe_create_index('usage_stats', 'idx_stats_date', 'created_at');
+CREATE INDEX IF NOT EXISTS idx_stats_action ON usage_stats(action_type);
+CREATE INDEX IF NOT EXISTS idx_stats_date ON usage_stats(created_at);
 
--- Cleanup helper procedure
-DROP PROCEDURE IF EXISTS safe_create_index;
-DROP PROCEDURE IF EXISTS idx_create;
+-- -----------------------------------------------------------
+-- Precios de tiendas por ingrediente
+-- -----------------------------------------------------------
+CREATE TABLE IF NOT EXISTS ingredient_store_prices (
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  ingredient_id INTEGER NOT NULL,
+  store         TEXT NOT NULL,
+  price         REAL NOT NULL,
+  product_url   TEXT DEFAULT NULL,
+  FOREIGN KEY (ingredient_id) REFERENCES ingredients(id) ON DELETE CASCADE
+);

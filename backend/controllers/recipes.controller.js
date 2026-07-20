@@ -1,6 +1,6 @@
 const Recipe = require('../models/Recipe');
 const UsageStats = require('../models/UsageStats');
-const { pool } = require('../config/db');
+const { db } = require('../config/db');
 
 exports.getAll = async (req, res, next) => {
   try {
@@ -71,23 +71,20 @@ exports.getSteps = async (req, res, next) => {
 };
 
 exports.saveSteps = async (req, res, next) => {
-  const connection = await pool.getConnection();
   try {
     const { steps } = req.body;
     if (!Array.isArray(steps)) {
       return res.status(400).json({ error: 'steps debe ser un array' });
     }
-    await connection.beginTransaction();
-    await Recipe.clearSteps(req.params.id, connection);
-    for (let i = 0; i < steps.length; i++) {
-      await Recipe.addStep(req.params.id, i + 1, steps[i].instruction, steps[i].timer_seconds, connection);
-    }
-    await connection.commit();
+    await db.batch([
+      { sql: 'DELETE FROM recipe_steps WHERE recipe_id = ?', args: [req.params.id] },
+      ...steps.map((s, i) => ({
+        sql: 'INSERT INTO recipe_steps (recipe_id, step_number, instruction, timer_seconds) VALUES (?, ?, ?, ?)',
+        args: [req.params.id, i + 1, s.instruction, s.timer_seconds || null],
+      })),
+    ], 'write');
     res.json({ message: 'Pasos guardados' });
   } catch (err) {
-    await connection.rollback();
     next(err);
-  } finally {
-    connection.release();
   }
 };

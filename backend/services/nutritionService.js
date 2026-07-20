@@ -1,4 +1,4 @@
-const { pool } = require('../config/db');
+const { db } = require('../config/db');
 
 const NUTRITION_CASE = `
   CASE ri.unit
@@ -18,41 +18,41 @@ function selectNutrition(prefix = '') {
 
 const NutritionService = {
   async getRecipeNutrition(recipeId) {
-    const [rows] = await pool.query(
-      `SELECT ${selectNutrition()}
-       FROM recipe_ingredients ri
-       JOIN ingredients i ON i.id = ri.ingredient_id
-       WHERE ri.recipe_id = ?`,
-      [recipeId]
-    );
-    return rows[0];
+    const result = await db.execute({
+      sql: `SELECT ${selectNutrition()}
+            FROM recipe_ingredients ri
+            JOIN ingredients i ON i.id = ri.ingredient_id
+            WHERE ri.recipe_id = ?`,
+      args: [recipeId],
+    });
+    return result.rows[0];
   },
 
   async getDayNutrition(userId, date) {
-    const [rows] = await pool.query(
-      `SELECT ${selectNutrition()}
-       FROM meal_plan mp
-       JOIN recipe_ingredients ri ON ri.recipe_id = mp.recipe_id
-       JOIN ingredients i ON i.id = ri.ingredient_id
-       WHERE mp.user_id = ? AND mp.plan_date = ?`,
-      [userId, date]
-    );
-    return rows[0];
+    const result = await db.execute({
+      sql: `SELECT ${selectNutrition()}
+            FROM meal_plan mp
+            JOIN recipe_ingredients ri ON ri.recipe_id = mp.recipe_id
+            JOIN ingredients i ON i.id = ri.ingredient_id
+            WHERE mp.user_id = ? AND mp.plan_date = ?`,
+      args: [userId, date],
+    });
+    return result.rows[0];
   },
 
   async getWeekNutrition(userId, startDate, endDate) {
-    const [rows] = await pool.query(
-      `SELECT mp.plan_date,
-              ${selectNutrition()}
-       FROM meal_plan mp
-       JOIN recipe_ingredients ri ON ri.recipe_id = mp.recipe_id
-       JOIN ingredients i ON i.id = ri.ingredient_id
-       WHERE mp.user_id = ? AND mp.plan_date BETWEEN ? AND ?
-       GROUP BY mp.plan_date
-       ORDER BY mp.plan_date`,
-      [userId, startDate, endDate]
-    );
-    return rows;
+    const result = await db.execute({
+      sql: `SELECT mp.plan_date,
+                   ${selectNutrition()}
+            FROM meal_plan mp
+            JOIN recipe_ingredients ri ON ri.recipe_id = mp.recipe_id
+            JOIN ingredients i ON i.id = ri.ingredient_id
+            WHERE mp.user_id = ? AND mp.plan_date BETWEEN ? AND ?
+            GROUP BY mp.plan_date
+            ORDER BY mp.plan_date`,
+      args: [userId, startDate, endDate],
+    });
+    return result.rows;
   },
 };
 
