@@ -885,23 +885,25 @@
   }
 
   .shop-cart {
-    position: fixed;
+    position: fixed !important;
     left: 0.4rem;
     right: 0.4rem;
     bottom: 0.4rem;
-    z-index: 300;
+    z-index: 400;
     border-radius: 16px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.16);
-    max-height: 3.4rem;
+    max-height: 4.2rem;
     overflow: hidden;
-    display: flex;
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
     flex-direction: column;
     border: 1px solid #E5E7EB;
     transition: max-height 0.25s ease;
   }
 
   .shop-cart.expanded {
-    max-height: 72vh;
+    max-height: 78vh;
     animation: slideUpCart 0.2s ease;
   }
 

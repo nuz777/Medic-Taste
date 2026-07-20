@@ -230,6 +230,8 @@ export function renderShopping(container) {
     if (cartEl) {
       cartEl.classList.add('expanded');
       cartEl.style.display = 'flex';
+      cartEl.style.visibility = 'visible';
+      cartEl.style.opacity = '1';
     }
     if (overlay) overlay.classList.add('open');
   }
@@ -241,6 +243,8 @@ export function renderShopping(container) {
       cartEl.classList.remove('expanded');
       if (window.innerWidth <= 768) {
         cartEl.style.display = 'flex';
+        cartEl.style.visibility = 'visible';
+        cartEl.style.opacity = '1';
       }
     }
     if (overlay) overlay.classList.remove('open');
