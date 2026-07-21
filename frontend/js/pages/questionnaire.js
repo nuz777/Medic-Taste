@@ -146,6 +146,7 @@ export function renderQuestionnaire(container) {
                   o.classList.remove('selected');
                 }
               });
+              opt.classList.add('selected');
               answers[q.name] = ['none'];
             } else if (input.value !== 'none' && input.checked) {
               const noneOpt = Array.from(options).find(o => o.querySelector('input').value === 'none');
@@ -159,11 +160,16 @@ export function renderQuestionnaire(container) {
                 inp.disabled = false;
                 o.classList.remove('disabled');
               });
+              opt.classList.add('selected');
               answers[q.name] = [...document.querySelectorAll(`input[name="${q.name}"]:checked`)].map(el => el.value);
             } else {
+              opt.classList.toggle('selected', input.checked);
               answers[q.name] = [...document.querySelectorAll(`input[name="${q.name}"]:checked`)].map(el => el.value);
               if (!answers[q.name].length) {
-                options.forEach(o => o.querySelector('input').disabled = false);
+                options.forEach(o => {
+                  o.querySelector('input').disabled = false;
+                  o.classList.remove('disabled');
+                });
               }
             }
           } else {
@@ -190,6 +196,7 @@ export function renderQuestionnaire(container) {
                   o.classList.remove('selected');
                 }
               });
+              opt.classList.add('selected');
               answers[q.name] = ['none'];
             } else if (input.value !== 'none' && input.checked) {
               const noneOpt = Array.from(options).find(o => o.querySelector('input').value === 'none');
@@ -203,11 +210,16 @@ export function renderQuestionnaire(container) {
                 inp.disabled = false;
                 o.classList.remove('disabled');
               });
+              opt.classList.add('selected');
               answers[q.name] = [...document.querySelectorAll(`input[name="${q.name}"]:checked`)].map(el => el.value);
             } else {
+              opt.classList.toggle('selected', input.checked);
               answers[q.name] = [...document.querySelectorAll(`input[name="${q.name}"]:checked`)].map(el => el.value);
               if (!answers[q.name].length) {
-                options.forEach(o => o.querySelector('input').disabled = false);
+                options.forEach(o => {
+                  o.querySelector('input').disabled = false;
+                  o.classList.remove('disabled');
+                });
               }
             }
           } else {
