@@ -723,11 +723,12 @@
                   const inp = o.querySelector('input');
                   if (inp.value !== 'none') {
                     inp.checked = false;
-                  inp.disabled = true;
-                  inp.closest('.q-option').classList.add('disabled');
-                  o.classList.remove('selected');
+                    inp.disabled = true;
+                    inp.closest('.q-option').classList.add('disabled');
+                    o.classList.remove('selected');
                   }
                 });
+                opt.classList.add('selected');
                 answers[q.name] = ['none'];
               } else if (input.value !== 'none' && input.checked) {
                 const noneOpt = Array.from(document.querySelectorAll('.q-option')).find(o => o.querySelector('input').value === 'none');
@@ -741,8 +742,10 @@
                   inp.disabled = false;
                   o.classList.remove('disabled');
                 });
+                opt.classList.add('selected');
                 answers[q.name] = [...document.querySelectorAll(`input[name="${q.name}"]:checked`)].map(el => el.value);
               } else {
+                opt.classList.toggle('selected', input.checked);
                 answers[q.name] = [...document.querySelectorAll(`input[name="${q.name}"]:checked`)].map(el => el.value);
                 if (!answers[q.name].length) {
                   document.querySelectorAll('.q-option').forEach(o => {
@@ -770,11 +773,12 @@
                   const inp = o.querySelector('input');
                   if (inp.value !== 'none') {
                     inp.checked = false;
-                  inp.disabled = true;
-                  inp.closest('.q-option').classList.add('disabled');
-                  o.classList.remove('selected');
+                    inp.disabled = true;
+                    inp.closest('.q-option').classList.add('disabled');
+                    o.classList.remove('selected');
                   }
                 });
+                opt.classList.add('selected');
                 answers[q.name] = ['none'];
               } else if (input.value !== 'none' && input.checked) {
                 const noneOpt = Array.from(document.querySelectorAll('.q-option')).find(o => o.querySelector('input').value === 'none');
@@ -788,8 +792,10 @@
                   inp.disabled = false;
                   o.classList.remove('disabled');
                 });
+                opt.classList.add('selected');
                 answers[q.name] = [...document.querySelectorAll(`input[name="${q.name}"]:checked`)].map(el => el.value);
               } else {
+                opt.classList.toggle('selected', input.checked);
                 answers[q.name] = [...document.querySelectorAll(`input[name="${q.name}"]:checked`)].map(el => el.value);
                 if (!answers[q.name].length) {
                   document.querySelectorAll('.q-option').forEach(o => {
