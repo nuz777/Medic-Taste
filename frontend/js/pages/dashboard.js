@@ -5,6 +5,13 @@ import { getDailyCalorieGoal, formatDailyCalorieGoal } from '../utils/calorieGoa
 
 const MACRO_TARGETS = { protein: 77, carbs: 136, fat: 40 };
 
+function toISODate(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${dd}`;
+}
+
 const MEAL_ICONS = {
   desayuno: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>',
   almuerzo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path></svg>',
@@ -52,7 +59,7 @@ export async function renderDashboard(container) {
         </svg>
         <div class="dash-ring-center">
           <span class="dash-ring-value" id="dashCalValue">--</span>
-          <span class="dash-ring-label">Consumido</span>
+          <span class="dash-ring-label" id="dashRingLabel">Consumido</span>
         </div>
       </div>
     </div>
@@ -150,7 +157,7 @@ function loadMealCards() {
   const el = document.getElementById('dashMeals');
   try {
     const weekPlan = JSON.parse(localStorage.getItem('tf_week_plan') || '{}');
-    const todayStr = new Date().toISOString().split('T')[0];
+    const todayStr = toISODate(new Date());
     const todayMeals = weekPlan[todayStr] || [];
 
     if (todayMeals.length > 0) {
@@ -160,7 +167,7 @@ function loadMealCards() {
     }
   } catch (e) {
     console.error('[Dashboard] loadMealCards error:', e);
-    loadMealCardsFromAPI(el, new Date().toISOString().split('T')[0]);
+    loadMealCardsFromAPI(el, toISODate(new Date()));
   }
 }
 
@@ -213,7 +220,7 @@ function renderEmptyMealCards(el) {
 }
 
 async function loadNutrition() {
-  const todayStr = new Date().toISOString().split('T')[0];
+  const todayStr = toISODate(new Date());
   try {
     const key = `tf_eaten_${todayStr}`;
     const eaten = JSON.parse(localStorage.getItem(key) || '[]');
@@ -228,6 +235,7 @@ async function loadNutrition() {
     const isComplete = consumed >= target;
     calEl.textContent = isComplete ? '¡Completado!' : Math.round(consumed);
     calEl.classList.toggle('completed', isComplete);
+    document.getElementById('dashRingLabel').textContent = isComplete ? 'Día terminado' : 'Consumido';
     document.getElementById('dashRemaining').textContent = Math.max(0, Math.round(target - consumed));
 
     setRingProgress('dashRingProgress', consumed, target);

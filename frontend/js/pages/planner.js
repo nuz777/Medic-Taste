@@ -25,7 +25,10 @@ function getMonday(date) {
 }
 
 function toISODate(d) {
-  return d.toISOString().split('T')[0];
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${dd}`;
 }
 
 function todayStr() {
@@ -267,14 +270,35 @@ export function renderPlanner(container) {
     const existing = document.querySelector('.planner-goal-msg');
     if (existing) existing.remove();
 
-    const msg = document.createElement('div');
-    msg.className = 'planner-goal-msg';
-    msg.innerHTML = `
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <span>¡Has alcanzado tu objetivo de ${calorieGoal} calorías! <strong>${escapeHtml(name)}</strong> será para mañana.</span>
-    `;
-    document.getElementById('plannerCards').prepend(msg);
-    setTimeout(() => msg.remove(), 4000);
+    const modal = document.createElement('div');
+    modal.className = 'planner-goal-modal';
+    modal.innerHTML = `
+      <div class="planner-goal-card">
+        <div class="planner-goal-check">
+          <svg viewBox="0 0 52 52">
+            <circle class="planner-goal-check-circle" cx="26" cy="26" r="25" fill="none"/>
+            <path class="planner-goal-check-path" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+          </svg>
+        </div>
+        <h3>¡Día completado!</h3>
+        <p>Llegaste a las <strong>${calorieGoal} calorías</strong>. Descansa y vuelve mañana.</p>
+        <button class="planner-goal-close" id="goalModalClose">¡Genial!</button>
+      </div>`;
+
+    document.body.appendChild(modal);
+    requestAnimationFrame(() => modal.classList.add('visible'));
+
+    modal.querySelector('#goalModalClose').addEventListener('click', () => {
+      modal.classList.remove('visible');
+      modal.addEventListener('transitionend', () => modal.remove(), { once: true });
+    });
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.remove('visible');
+        modal.addEventListener('transitionend', () => modal.remove(), { once: true });
+      }
+    });
   }
 
   function openAddModal() {

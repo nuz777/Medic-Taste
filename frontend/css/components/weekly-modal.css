@@ -25,6 +25,29 @@
 
 .weekly-modal-header {
   padding: 1.75rem 1.75rem 0;
+  position: relative;
+}
+
+.weekly-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.weekly-modal-close:hover {
+  background: var(--primary-light);
+  color: var(--text);
 }
 
 .weekly-modal-badge {

@@ -3,6 +3,13 @@ import { getUser, completeOnboarding } from '../services/authService.js';
 
 const STORAGE_KEY = 'tf_preferences';
 
+function toISODate(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${dd}`;
+}
+
 const questions = [
   {
     title: '¿Cómo te describirías?',
@@ -398,7 +405,7 @@ async function generatePlan(container) {
       for (let d = 0; d < 7; d++) {
         const date = new Date(weekMonday);
         date.setDate(weekMonday.getDate() + d);
-        const dateStr = date.toISOString().split('T')[0];
+        const dateStr = toISODate(date);
 
         let dayMealsCount;
         if (d < 5) {

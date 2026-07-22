@@ -286,6 +286,107 @@
   flex-shrink: 0;
 }
 
+.planner-goal-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.planner-goal-modal.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.planner-goal-card {
+  background: var(--surface, #fff);
+  border-radius: 24px;
+  padding: 2.5rem 2rem 2rem;
+  text-align: center;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+  max-width: 340px;
+  width: 100%;
+  transform: scale(0.9) translateY(12px);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.planner-goal-modal.visible .planner-goal-card {
+  transform: scale(1) translateY(0);
+}
+
+.planner-goal-check {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 1.25rem;
+}
+
+.planner-goal-check svg {
+  width: 100%;
+  height: 100%;
+}
+
+.planner-goal-check-circle {
+  stroke: #10b981;
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-width: 2;
+  animation: goalCircleDraw 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.planner-goal-check-path {
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: goalCheckDraw 0.35s cubic-bezier(0.65, 0, 0.45, 1) 0.4s forwards;
+}
+
+@keyframes goalCircleDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes goalCheckDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+.planner-goal-card h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text, #111827);
+  margin: 0 0 0.5rem;
+}
+
+.planner-goal-card p {
+  margin: 0 0 1.5rem;
+  font-size: 0.92rem;
+  color: var(--text-secondary, #6b7280);
+  line-height: 1.5;
+}
+
+.planner-goal-close {
+  width: 100%;
+  border: none;
+  background: #10b981;
+  color: #fff;
+  padding: 0.85rem 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.planner-goal-close:hover {
+  background: #059669;
+  transform: scale(1.02);
+}
+
 .planner-eaten-modal {
   position: fixed;
   inset: 0;

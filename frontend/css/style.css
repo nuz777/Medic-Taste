@@ -241,6 +241,7 @@ img {
 
 .welcome-modal-overlay.dismiss {
   opacity: 0;
+  pointer-events: none;
 }
 
 .welcome-modal {

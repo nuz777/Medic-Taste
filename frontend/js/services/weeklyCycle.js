@@ -16,7 +16,10 @@ function getMonday(date) {
 }
 
 function toISODate(d) {
-  return d.toISOString().split('T')[0];
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${dd}`;
 }
 
 function getWeekBounds(date) {
@@ -190,6 +193,9 @@ function showWeeklyModal(questions) {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             Nueva semana
           </span>
+          <button class="weekly-modal-close" id="weeklyModalClose" aria-label="Cerrar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
           <h2>¡Nueva semana!</h2>
           <p class="weekly-modal-sub">Tu plan de la semana pasada ha terminado. Cuéntanos cómo te fue para preparar tu nueva semana.</p>
         </div>
@@ -200,6 +206,18 @@ function showWeeklyModal(questions) {
       </div>`;
 
     document.body.appendChild(overlay);
+
+    document.getElementById('weeklyModalClose').addEventListener('click', () => {
+      overlay.remove();
+      resolve({});
+    });
+
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        overlay.remove();
+        resolve({});
+      }
+    });
 
     let currentStep = 0;
     const answers = {};
@@ -367,6 +385,16 @@ export async function checkWeeklyCycle() {
       savePromptedWeek(bounds.weekStartStr);
       return;
     }
+
+    saveState({
+      weekNumber: 1,
+      weekStart: bounds.weekStartStr,
+      weekEnd: bounds.weekEndStr,
+      generatedAt: new Date().toISOString(),
+      status: 'active',
+    });
+    savePromptedWeek(bounds.weekStartStr);
+    return;
   }
 
   if (state && state.weekStart === bounds.weekStartStr) {

@@ -2,7 +2,13 @@ import { post, put, del, get } from './api.js';
 import { CONFIG } from '../config.js';
 
 export async function login(email, password) {
+  const prevUser = getUser();
   const data = await post('/auth/login', { email, password });
+
+  if (prevUser && prevUser.id !== data.user.id) {
+    clearUserData();
+  }
+
   localStorage.setItem(CONFIG.STORAGE_KEYS.TOKEN, data.token);
   localStorage.setItem(CONFIG.STORAGE_KEYS.USER, JSON.stringify(data.user));
   if (!data.user.onboarding_completed) localStorage.removeItem('tf_questionnaire_done');
@@ -21,7 +27,7 @@ export async function register(name, email, password) {
 function clearUserData() {
   const keys = Object.keys(localStorage);
   for (const key of keys) {
-    if (key.startsWith('tf_eaten_') || key.startsWith('tf_week_') || key === 'tf_preferences' || key === 'tf_questionnaire_history' || key === 'tf_questionnaire_done') {
+    if (key.startsWith('tf_eaten_') || key.startsWith('tf_week_') || key === 'tf_preferences' || key === 'tf_questionnaire_history' || key === 'tf_questionnaire_done' || key === 'tf_welcome_shown' || key === 'tf_week_state' || key === 'tf_week_modal_prompted') {
       localStorage.removeItem(key);
     }
   }

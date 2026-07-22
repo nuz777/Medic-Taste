@@ -952,12 +952,21 @@
         let recipeIndex = 0;
         const today = new Date();
         const monday = new Date(today);
-        monday.setDate(today.getDate() - today.getDay() + 1);
+        const dayOfWeek = today.getDay();
+        monday.setDate(today.getDate() + (dayOfWeek === 0 ? -6 : 1 - dayOfWeek));
+        monday.setHours(0, 0, 0, 0);
+
+        function toLocalISODate(d) {
+          const y = d.getFullYear();
+          const m = String(d.getMonth() + 1).padStart(2, '0');
+          const dd = String(d.getDate()).padStart(2, '0');
+          return `${y}-${m}-${dd}`;
+        }
 
         for (let d = 0; d < 7; d++) {
           const date = new Date(monday);
           date.setDate(monday.getDate() + d);
-          const dateStr = date.toISOString().split('T')[0];
+          const dateStr = toLocalISODate(date);
           const dayMeals = [];
 
           for (const mealType of [...new Set(mealTypes)]) {
@@ -976,14 +985,15 @@
         localStorage.setItem('tf_week_plan', JSON.stringify(weekPlan));
         localStorage.setItem('tf_questionnaire_done', 'true');
 
-        const weekStartStr = monday.toISOString().split('T')[0];
+        const weekStartStr = toLocalISODate(monday);
         const weekEndDate = new Date(monday);
         weekEndDate.setDate(monday.getDate() + 6);
         localStorage.setItem('tf_week_state', JSON.stringify({
           weekNumber: 1,
           weekStart: weekStartStr,
-          weekEnd: weekEndDate.toISOString().split('T')[0],
+          weekEnd: toLocalISODate(weekEndDate),
           generatedAt: new Date().toISOString(),
+          status: 'active',
         }));
 
         const allMeals = Object.entries(weekPlan).flatMap(([dateStr, meals]) =>
@@ -995,7 +1005,7 @@
         );
         await Promise.allSettled(allMeals.map((m) => post('/planner', m)));
 
-        completeOnboarding().catch(() => {});
+        await completeOnboarding().catch(() => {});
 
         content.innerHTML = `
           <div class="q-result">

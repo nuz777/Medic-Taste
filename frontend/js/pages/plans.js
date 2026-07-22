@@ -11,6 +11,13 @@ function getMonday(date) {
   return d;
 }
 
+function toISODate(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${dd}`;
+}
+
 export async function renderPlans(container) {
   container.innerHTML = `
     <div class="plans-header">
@@ -83,8 +90,8 @@ async function loadChart() {
   const el = document.getElementById('chartBars');
   document.querySelectorAll('.plans-bar-tooltip').forEach(t => t.remove());
   const monday = getMonday(new Date());
-  const start = monday.toISOString().split('T')[0];
-  const end = new Date(monday.getTime() + 6 * 86400000).toISOString().split('T')[0];
+  const start = toISODate(monday);
+  const end = toISODate(new Date(monday.getTime() + 6 * 86400000));
 
   try {
     const weekData = await get(`/nutrition/week?start=${start}&end=${end}`);
@@ -98,7 +105,7 @@ async function loadChart() {
     const dayEntries = Array.from({ length: 7 }, (_, i) => {
       const d = new Date(monday);
       d.setDate(monday.getDate() + i);
-      const ds = d.toISOString().split('T')[0];
+      const ds = toISODate(d);
       return {
         label: DAYS[i],
         fullDay: DAYS_FULL[d.getDay()],

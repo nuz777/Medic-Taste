@@ -8,6 +8,7 @@ import { renderShopping } from './pages/shopping.js';
 import { renderProfile } from './pages/profile.js';
 import { getUser, isAuthenticated, logout, getMe } from './services/authService.js';
 import { checkWeeklyCycle } from './services/weeklyCycle.js';
+import { initChatbot } from './components/chatbot.js';
 
 const sidebar = document.getElementById('sidebar');
 const sidebarOverlay = document.getElementById('sidebarOverlay');
@@ -91,7 +92,7 @@ function showWelcomeModal() {
 
   function closeModal() {
     overlay.classList.add('dismiss');
-    overlay.addEventListener('animationend', () => overlay.remove(), { once: true });
+    overlay.addEventListener('transitionend', () => overlay.remove(), { once: true });
   }
 
   overlay.addEventListener('click', (event) => {
@@ -208,17 +209,19 @@ sidebarLinks.forEach(link => {
     return;
   }
 
-  await checkWeeklyCycle();
-
   window.addEventListener('hashchange', () => {
     navigate(getPageFromHash());
   });
 
   navigate(getPageFromHash());
 
+  initChatbot();
+
   if (isWelcomeModalPending()) {
     setTimeout(showWelcomeModal, 500);
   }
+
+  await checkWeeklyCycle();
 
   // Toast recommendations
   const TOAST_TIPS = [

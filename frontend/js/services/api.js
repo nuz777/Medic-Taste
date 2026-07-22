@@ -7,7 +7,14 @@ class ApiError extends Error {
   }
 }
 
-async function request(endpoint, options = {}) {
+const MAX_RETRIES = 2;
+const RETRY_DELAY = 800;
+
+function delay(ms) {
+  return new Promise(r => setTimeout(r, ms));
+}
+
+async function request(endpoint, options = {}, retryCount = 0) {
   const token = localStorage.getItem(CONFIG.STORAGE_KEYS.TOKEN);
 
   const headers = {
@@ -23,6 +30,11 @@ async function request(endpoint, options = {}) {
     ...options,
     headers,
   });
+
+  if (!res.ok && res.status >= 500 && retryCount < MAX_RETRIES) {
+    await delay(RETRY_DELAY * (retryCount + 1));
+    return request(endpoint, options, retryCount + 1);
+  }
 
   let data;
   const contentType = res.headers.get('content-type') || '';
