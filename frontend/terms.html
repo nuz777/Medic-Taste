@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Términos y Condiciones — Medic-Taste</title>
+  <link rel="icon" href="assets/icons/iconCruz.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/icons/iconCruz.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <style>
+    .terms-page {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .terms-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border-light);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .terms-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .terms-back {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color var(--transition-fast);
+    }
+    .terms-back:hover {
+      color: var(--primary);
+    }
+    .lang-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      padding: 0.3rem;
+    }
+    .lang-btn {
+      padding: 0.4rem 0.85rem;
+      border-radius: var(--radius-pill);
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: var(--font);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .lang-btn.active {
+      background: var(--primary);
+      color: #fff;
+    }
+    .terms-body {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+    .terms-body h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+    .terms-body .terms-date {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+    .terms-body h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      color: var(--text);
+    }
+    .terms-body p,
+    .terms-body li {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+    }
+    .terms-body ul {
+      padding-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .terms-body li {
+      margin-bottom: 0.4rem;
+    }
+    .terms-disclaimer {
+      background: var(--warning-light);
+      border: 1px solid var(--warning);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+    }
+    .terms-disclaimer strong {
+      color: var(--warning);
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+    .terms-disclaimer p {
+      margin-bottom: 0;
+      color: var(--text);
+    }
+    @media (max-width: 640px) {
+      .terms-body {
+        padding: 1.5rem 1rem 3rem;
+      }
+      .terms-body h1 {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="terms-page">
+    <header class="terms-header">
+      <div class="container">
+        <a href="javascript:void(0)" id="termsBackBtn" class="terms-back">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          <span data-es="Volver" data-en="Back">Volver</span>
+        </a>
+        <div class="lang-toggle">
+          <button class="lang-btn active" data-lang="es">ES</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="terms-body">
+      <!-- ESPAÑOL -->
+      <div id="content-es">
+        <h1>Términos y Condiciones</h1>
+        <p class="terms-date">Última actualización: julio 2026</p>
+
+        <div class="terms-disclaimer">
+          <strong>Aviso importante</strong>
+          <p>Medic-Taste es un <strong>software de demostración</strong> con fines educativos y de desarrollo. No es un servicio médico, nutricional ni hospitalario.</p>
+        </div>
+
+        <h2>1. Naturaleza del servicio</h2>
+        <p>Medic-Taste es una aplicación de demostración diseñada para fines educativos y de portafolio. No pretende sustituir el consejo médico, nutricional ni profesional de ningún tipo.</p>
+
+        <h2>2. Recetas generadas por inteligencia artificial</h2>
+        <p>Todas las recetas disponibles en Medic-Taste son generadas mediante <strong>inteligencia artificial (IA)</strong>. Esto significa que:</p>
+        <ul>
+          <li>Las recetas <strong>no son elaboradas por nutricionistas, médicos ni profesionales de la salud</strong>.</li>
+          <li>Las recetas <strong>no provienen de ningún hospital, clínica u organización de salud</strong>.</li>
+          <li>Las recetas no deben utilizarse como plan nutricional o dietético sin consultar a un profesional de salud calificado.</li>
+          <li>Los valores nutricionales mostrados son estimaciones generadas por IA y pueden no ser precisos.</li>
+        </ul>
+
+        <h2>3. No es asesoramiento médico</h2>
+        <p>La información proporcionada en esta aplicación, incluyendo recetas, planes de alimentación y sugerencias nutricionales, <strong>no constituye asesoramiento médico</strong>. Siempre consulta con un profesional de la salud antes de realizar cambios significativos en tu dieta.</p>
+
+        <h2>4. Limitación de responsabilidad</h2>
+        <p>Dado que Medic-Taste es un software de demostración y todas sus recetas son generadas por IA:</p>
+        <ul>
+          <li>No nos hacemos responsables de posibles reacciones alérgicas o efectos adversos derivados del consumo de las recetas sugeridas.</li>
+          <li>No garantizamos la precisión de la información nutricional mostrada.</li>
+          <li>El uso de esta aplicación es bajo tu propio riesgo.</li>
+        </ul>
+
+        <h2>5. Uso de la aplicación</h2>
+        <p>Medic-Taste se proporciona "tal cual" y "según disponibilidad" sin garantías de ningún tipo, ya sea expresas o implícitas. Esta es una demostración de software y no un producto comercial final.</p>
+
+        <h2>6. Cambios en los términos</h2>
+        <p>Nos reservamos el derecho de modificar estos términos en cualquier momento. Los cambios serán publicados en esta página con la fecha de actualización correspondiente.</p>
+      </div>
+
+      <!-- ENGLISH -->
+      <div id="content-en" style="display:none;">
+        <h1>Terms and Conditions</h1>
+        <p class="terms-date">Last updated: July 2026</p>
+
+        <div class="terms-disclaimer">
+          <strong>Important Notice</strong>
+          <p>Medic-Taste is a <strong>demonstration software</strong> created for educational and development purposes only. It is not a medical, nutritional, or hospital service.</p>
+        </div>
+
+        <h2>1. Nature of the Service</h2>
+        <p>Medic-Taste is a demonstration application designed for educational and portfolio purposes. It is not intended to replace medical, nutritional, or any other type of professional advice.</p>
+
+        <h2>2. Recipes Generated by Artificial Intelligence</h2>
+        <p>All recipes available in Medic-Taste are generated using <strong>Artificial Intelligence (AI)</strong>. This means that:</p>
+        <ul>
+          <li>Recipes are <strong>not created by nutritionists, doctors, or healthcare professionals</strong>.</li>
+          <li>Recipes <strong>do not come from any hospital, clinic, or health organization</strong>.</li>
+          <li>Recipes should not be used as a nutritional or dietary plan without consulting a qualified healthcare professional.</li>
+          <li>Nutritional values displayed are AI-generated estimates and may not be accurate.</li>
+        </ul>
+
+        <h2>3. Not Medical Advice</h2>
+        <p>The information provided in this application, including recipes, meal plans, and nutritional suggestions, <strong>does not constitute medical advice</strong>. Always consult with a healthcare professional before making significant changes to your diet.</p>
+
+        <h2>4. Limitation of Liability</h2>
+        <p>Since Medic-Taste is a demonstration software and all its recipes are AI-generated:</p>
+        <ul>
+          <li>We are not responsible for possible allergic reactions or adverse effects resulting from consuming the suggested recipes.</li>
+          <li>We do not guarantee the accuracy of the nutritional information displayed.</li>
+          <li>The use of this application is at your own risk.</li>
+        </ul>
+
+        <h2>5. Use of the Application</h2>
+        <p>Medic-Taste is provided "as is" and "as available" without warranties of any kind, whether express or implied. This is a software demonstration and not a final commercial product.</p>
+
+        <h2>6. Changes to Terms</h2>
+        <p>We reserve the right to modify these terms at any time. Changes will be published on this page with the corresponding update date.</p>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    (function() {
+      var saved = localStorage.getItem('tf_theme');
+      if (saved === 'dark') document.documentElement.classList.add('dark');
+      else if (saved === 'light') document.documentElement.classList.add('light');
+      else if (window.matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.classList.add('dark');
+    })();
+  </script>
+  <script>
+    (function() {
+      var esContent = document.getElementById('content-es');
+      var enContent = document.getElementById('content-en');
+      var langBtns = document.querySelectorAll('.lang-btn');
+
+      langBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var lang = btn.getAttribute('data-lang');
+          langBtns.forEach(function(b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+
+          if (lang === 'es') {
+            esContent.style.display = '';
+            enContent.style.display = 'none';
+          } else {
+            esContent.style.display = 'none';
+            enContent.style.display = '';
+          }
+        });
+      });
+    })();
+  </script>
+  <button class="fab-dark-toggle" id="fabDarkToggle" aria-label="Cambiar tema">
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+  </button>
+  <script>
+    (function() {
+      var fab = document.getElementById('fabDarkToggle');
+      function toggle() {
+        var isDark = document.documentElement.classList.contains('dark') ||
+          (!document.documentElement.classList.contains('light') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        var next = isDark ? 'light' : 'dark';
+        localStorage.setItem('tf_theme', next);
+        document.documentElement.classList.remove('dark', 'light');
+        document.documentElement.classList.add(next);
+      }
+      if (fab) fab.addEventListener('click', toggle);
+    })();
+  </script>
+  <script>
+    (function() {
+      var btn = document.getElementById('termsBackBtn');
+      if (btn) {
+        btn.addEventListener('click', function() {
+          if (window.history.length > 1) {
+            window.history.back();
+          } else {
+            window.location.href = 'register.html';
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
